@@ -20,8 +20,10 @@ public class MonitoringLogEntity implements SuperEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String observed_image;
     @ManyToMany
-    @JoinTable(name = )
+    @JoinTable(name = "Log_Field",joinColumns = @JoinColumn(name = "log_code"),
+                                  inverseJoinColumns = @JoinColumn(name = "field_code"))
     private List<FieldEntity> fields;
+    @OneToMany(mappedBy = "")
     private List<CropEntity> crops;
     private List<StaffEntity> staff;
 
