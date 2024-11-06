@@ -1,6 +1,7 @@
 package lk.ijse.green_shadow.entity.impl;
 
 import jakarta.persistence.*;
+import lk.ijse.green_shadow.entity.Status;
 import lk.ijse.green_shadow.entity.SuperEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,8 @@ public class VehicleEntity implements SuperEntity {
     private String licensePlateNumber;
     private String vehicleCategory;
     private String fuelType;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String remarks;
     @ManyToOne
     @JoinColumn(name = "id")
