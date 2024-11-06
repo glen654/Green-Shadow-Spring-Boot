@@ -19,12 +19,11 @@ public class MonitoringLogEntity implements SuperEntity {
     private String log_details;
     @Column(columnDefinition = "LONGTEXT")
     private String observed_image;
-    @ManyToMany
-    @JoinTable(name = "Log_Field",joinColumns = @JoinColumn(name = "log_code"),
-                                  inverseJoinColumns = @JoinColumn(name = "field_code"))
+    @OneToMany(mappedBy = "field_code",cascade = CascadeType.ALL)
     private List<FieldEntity> fields;
-    @OneToMany(mappedBy = "")
+    @OneToMany(mappedBy = "crop_code",cascade = CascadeType.ALL)
     private List<CropEntity> crops;
+    @OneToMany(mappedBy = "id",cascade = CascadeType.ALL)
     private List<StaffEntity> staff;
 
 }

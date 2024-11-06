@@ -23,5 +23,6 @@ public class EquipmentEntity implements SuperEntity {
     @JoinColumn(name = "id")
     private StaffEntity assigned_staff;
     @ManyToOne
+    @JoinColumn(name = "field_code")
     private FieldEntity assigned_field;
 }
