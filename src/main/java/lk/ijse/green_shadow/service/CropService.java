@@ -1,5 +1,18 @@
 package lk.ijse.green_shadow.service;
 
-public interface CropService {
+import lk.ijse.green_shadow.dto.CropStatus;
+import lk.ijse.green_shadow.dto.impl.CropDTO;
 
+import java.util.List;
+
+public interface CropService {
+    void saveCrop(CropDTO cropDTO);
+
+    List<CropDTO> getAllCrops();
+
+    CropStatus getCrop(String cropCode);
+
+    void deleteCrop(String cropCode);
+
+    void updateCrop(String cropCode,CropDTO cropDTO);
 }

@@ -19,7 +19,7 @@ public class Mapping {
         return modelMapper.map(cropDTO, CropEntity.class);
     }
 
-    public CropDTO toCropDTOList(CropEntity cropEntity) {
+    public CropDTO toCropDTO(CropEntity cropEntity) {
         return modelMapper.map(cropEntity, CropDTO.class);
     }
 
