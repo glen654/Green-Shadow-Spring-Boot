@@ -1,11 +1,14 @@
 package lk.ijse.green_shadow.controller;
 
+import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.exception.CropNotFoundException;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.service.CropService;
 import lk.ijse.green_shadow.util.AppUtil;
+import lk.ijse.green_shadow.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -57,8 +61,50 @@ public class CropController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping(value = "/{cropCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CropStatus getSelectedCrop(@PathVariable ("crop_code") String crop_code){
+        if(!Regex.cropCodeMatcher(crop_code)){
+            return new SelectedErrorStatus(1,"Crop code is invalid");
+        }
+        return cropService.getCrop(crop_code);
+    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CropDTO> getAllCrops(){
+        return cropService.getAllCrops();
+    }
+    @DeleteMapping(value = "/{cropCode}")
+    public ResponseEntity<Void> deleteCrop(@PathVariable ("crop_code") String crop_code){
+        try {
+            if(!Regex.cropCodeMatcher(crop_code)){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            cropService.deleteCrop(crop_code);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
+    }
+    @PutMapping(value = "/{cropCode}")
+    public ResponseEntity<Void> updateCrop(@PathVariable ("cropCode") String cropCode,
+                                           @RequestBody CropDTO cropDTO){
+
+        try {
+            if(!Regex.cropCodeMatcher(cropCode) || cropDTO ==null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            cropService.updateCrop(cropCode, cropDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
