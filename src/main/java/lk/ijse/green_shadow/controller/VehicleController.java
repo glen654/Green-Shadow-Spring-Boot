@@ -1,11 +1,11 @@
 package lk.ijse.green_shadow.controller;
 
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
-import lk.ijse.green_shadow.dto.EquipmentStatus;
-import lk.ijse.green_shadow.dto.impl.EquipmentDTO;
+import lk.ijse.green_shadow.dto.VehicleStatus;
+import lk.ijse.green_shadow.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
-import lk.ijse.green_shadow.exception.EquipmentNotFoundException;
-import lk.ijse.green_shadow.service.EquipmentService;
+import lk.ijse.green_shadow.exception.VehicleNotFoundException;
+import lk.ijse.green_shadow.service.VehicleService;
 import lk.ijse.green_shadow.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,44 +16,44 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/equipment")
-public class EquipmentController {
+@RequestMapping("api/v1/vehicle")
+public class VehicleController {
     @Autowired
-    private EquipmentService equipmentService;
+    private VehicleService vehicleService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
+    public ResponseEntity<Void> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
         try {
-            equipmentService.saveEquipment(equipmentDTO);
+            vehicleService.saveVehicle(vehicleDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (DataPersistException e) {
+        }catch (DataPersistException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value = "/{equipmentId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public EquipmentStatus getSelectedEquipment(@PathVariable ("equipmentId") String equipmentId) {
-        if (!Regex.equipIdMatcher(equipmentId)) {
-            return new SelectedErrorStatus(1, "Equipment id does not match");
+    @GetMapping(value = "/{vehicleCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public VehicleStatus getSelectedVehicle(@PathVariable ("vehicleCode") String vehicleCode) {
+        if(!Regex.vehicleCodeMatcher(vehicleCode)){
+            return new SelectedErrorStatus(1,"Vehicle code does not match");
         }
-        return equipmentService.getEquipment(equipmentId);
+        return vehicleService.getVehicle(vehicleCode);
     }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<EquipmentDTO> getAllEquipments() {
-        return equipmentService.getAllEquipment();
+    public List<VehicleDTO> getAllVehicles() {
+        return vehicleService.getAllVehicles();
     }
-    @DeleteMapping(value = "/{equipmentId}")
-    public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId) {
+    @DeleteMapping(value = "/{vehicleCode}")
+    public ResponseEntity<Void> deleteVehicle(@PathVariable("vehicleCode") String vehicleCode) {
         try {
-            if(!Regex.equipIdMatcher(equipmentId)) {
+            if(!Regex.vehicleCodeMatcher(vehicleCode)){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            equipmentService.deleteEquipment(equipmentId);
+            vehicleService.deleteVehicle(vehicleCode);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (EquipmentNotFoundException e){
+        }catch (VehicleNotFoundException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
@@ -61,17 +61,17 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping(value = "/{equipmentId}")
-    public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,
-                                                @RequestBody EquipmentDTO equipmentDTO) {
+    @PutMapping(value = "/{vehicleCode}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
+                                              @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            if(!Regex.equipIdMatcher(equipmentId) || equipmentDTO == null) {
+            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            equipmentService.updateEquipment(equipmentId, equipmentDTO);
+            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (EquipmentNotFoundException e){
+        }catch (VehicleNotFoundException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
