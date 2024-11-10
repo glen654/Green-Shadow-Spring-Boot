@@ -1,19 +1,20 @@
 package lk.ijse.green_shadow.controller;
 
+import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
+import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
+import lk.ijse.green_shadow.exception.FieldNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
+import lk.ijse.green_shadow.util.Regex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
@@ -59,6 +60,52 @@ public class FieldController {
         } catch (DataPersistException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping(value = "/{fieldCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public FieldStatus getSelectedField(@PathVariable ("fieldCode") String fieldCode) {
+        if(!Regex.fieldCodeMatcher(fieldCode)){
+            return new SelectedErrorStatus(1,"Field Code Not Matched");
+        }
+        return fieldService.getField(fieldCode);
+    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FieldDTO> getAllFields() {
+        return fieldService.getAllFields();
+    }
+    @DeleteMapping(value = "/{fieldCode}")
+    public ResponseEntity<Void> deleteField(@PathVariable("fieldCode") String fieldCode) {
+        try {
+            if(!Regex.fieldCodeMatcher(fieldCode)){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            fieldService.deleteField(fieldCode);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (FieldNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    @PutMapping(value = "/{fieldCode}")
+    public ResponseEntity<Void> updateField(@PathVariable ("fieldCode") String fieldCode,
+                                            @RequestBody FieldDTO fieldDTO) {
+
+        try {
+            if(!Regex.fieldCodeMatcher(fieldCode) || fieldDTO == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            fieldService.updateField(fieldCode, fieldDTO);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (FieldNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
