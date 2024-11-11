@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow.service.impl;
 
+import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.CropDao;
 import lk.ijse.green_shadow.dto.CropStatus;
@@ -13,10 +14,12 @@ import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CropServiceImpl implements CropService {
     @Autowired
     private CropDao cropDao;

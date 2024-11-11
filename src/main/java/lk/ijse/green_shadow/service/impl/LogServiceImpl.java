@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow.service.impl;
 
+import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.MonitoringLogDao;
 import lk.ijse.green_shadow.dto.MonitoringLogStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class LogServiceImpl implements LogService {
     @Autowired
     private MonitoringLogDao monitoringLogDao;

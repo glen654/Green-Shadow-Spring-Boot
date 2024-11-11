@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow.service.impl;
 
+import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.FieldDao;
 import lk.ijse.green_shadow.dto.FieldStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class FieldServiceImpl implements FieldService {
     @Autowired
     private FieldDao fieldDao;
