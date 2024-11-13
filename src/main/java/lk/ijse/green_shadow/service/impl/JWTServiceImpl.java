@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 @Service
 public class JWTServiceImpl implements JWTService {
-    @Value("${spring.jwtKey}")
+    @Value("${spring.jwtkey}")
     private String jwtKey;
 
     @Override
