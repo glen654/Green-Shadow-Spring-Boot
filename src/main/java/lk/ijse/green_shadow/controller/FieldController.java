@@ -28,7 +28,8 @@ public class FieldController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveField(@RequestPart ("field_name") String fieldName,
-                                          @RequestPart ("location") Point location,
+                                          @RequestPart ("x") Double x,
+                                          @RequestPart ("y") Double y,
                                           @RequestPart ("extent_size") Double extentSize,
                                           @RequestPart ("field_image1") MultipartFile fieldImage1,
                                           @RequestPart ("field_image2") MultipartFile fieldImage2,
@@ -45,6 +46,7 @@ public class FieldController {
             base64FieldImage2 = AppUtil.cropImageToBase64(bytesFieldImage2);
 
             String field_code = AppUtil.generateFieldId();
+            Point location = new Point(x.intValue(), y.intValue());
 
             FieldDTO buildFieldDTO = new FieldDTO();
             buildFieldDTO.setField_code(field_code);
