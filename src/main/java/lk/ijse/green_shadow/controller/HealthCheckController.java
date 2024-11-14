@@ -10,7 +10,7 @@ import java.awt.*;
 @RestController
 @RequestMapping("api/v1/health")
 public class HealthCheckController {
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public String healthTest(){
         return "Green Shadow API is working";
     }
