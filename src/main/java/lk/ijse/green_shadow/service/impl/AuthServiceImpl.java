@@ -23,9 +23,9 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     @Override
     public JWTAuthResponse signIn(SignIn signIn) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signIn.getEmail(),signIn.getPassword()));
         var user = userDao.findByEmail(signIn.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
         var generatedToken = jwtService.generateToken(user);
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
