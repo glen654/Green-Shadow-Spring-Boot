@@ -1,42 +1,45 @@
-<!-- Default configuration if no profile is set -->
-<springProfile name="default">
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<configuration>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT" />
-    </root>
-</springProfile>
+    <!-- Default configuration if no profile is set -->
+    <springProfile name="default">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
 
-        <!-- Development profile configuration -->
-<springProfile name="dev">
-    <appender name="FILE_DEV" class="ch.qos.logback.core.FileAppender">
-        <file>/home/glen/Documents/AAD Module/Green-Shadow-Spring-Boot/app.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
 
-    <root level="DEBUG">
-        <appender-ref ref="FILE_DEV" />
-    </root>
-</springProfile>
+    <!-- Development profile configuration -->
+    <springProfile name="dev">
+        <appender name="FILE_DEV" class="ch.qos.logback.core.FileAppender">
+            <file>/home/Documents/AAD Module/Green-Shadow-Spring-Boot/app.log</file>
+            <append>true</append>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
 
-        <!-- UAT profile configuration -->
-<springProfile name="uat">
-    <appender name="FILE_UAT" class="ch.qos.logback.core.FileAppender">
-        <file>/home/glen/Documents/AAD Module/Green-Shadow-Spring-Boot/app.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <root level="DEBUG">
+            <appender-ref ref="FILE_DEV" />
+        </root>
+    </springProfile>
 
-    <root level="INFO">
-        <appender-ref ref="FILE_UAT" />
-    </root>
-</springProfile>
+    <!-- UAT profile configuration -->
+    <springProfile name="uat">
+        <appender name="FILE_UAT" class="ch.qos.logback.core.FileAppender">
+            <file>/home/Documents/AAD Module/Green-Shadow-Spring-Boot/app.log</file>
+            <append>true</append>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="FILE_UAT" />
+        </root>
+    </springProfile>
+</configuration>

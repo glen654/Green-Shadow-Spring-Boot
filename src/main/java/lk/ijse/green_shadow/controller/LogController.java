@@ -11,6 +11,8 @@ import lk.ijse.green_shadow.exception.LogNotFoundException;
 import lk.ijse.green_shadow.service.LogService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Regex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +28,8 @@ import java.util.List;
 public class LogController {
     @Autowired
     private LogService logService;
+
+    private static Logger logger = LoggerFactory.getLogger(LogController.class);
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveLog(@RequestPart ("logDate") String logDate,
@@ -51,18 +55,22 @@ public class LogController {
             buildMonitoringLogDTO.setCrops(crops);
             buildMonitoringLogDTO.setStaff(staff);
             logService.saveLog(buildMonitoringLogDTO);
+            logger.info("Monitoring log saved");
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (DataPersistException e){
             e.printStackTrace();
+            logger.warn("Returning Http 400 Bad Request",e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Monitoring log save failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping(value = "/{logCode}",produces = MediaType.APPLICATION_JSON_VALUE)
     public MonitoringLogStatus getSelectedLog(@PathVariable ("logCode") String logCode){
         if(!Regex.logCodeMatcher(logCode)){
+            logger.error("Invalid log code");
             return new SelectedErrorStatus(1,"Log code not match");
         }
         return logService.getLog(logCode);
@@ -75,15 +83,19 @@ public class LogController {
     public ResponseEntity<Void> deleteLog(@PathVariable ("logCode") String logCode){
         try {
             if(!Regex.logCodeMatcher(logCode)){
+                logger.error("Invalid log code for deletion");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             logService.deleteLog(logCode);
+            logger.info("Log deleted successfully");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
             e.printStackTrace();
+            logger.warn("Log not found to delete",e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Log delete failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -93,15 +105,19 @@ public class LogController {
 
         try {
             if(!Regex.logCodeMatcher(logCode) || monitoringLogDTO == null){
+                logger.error("Invalid log code for update");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             logService.updateLog(logCode,monitoringLogDTO);
+            logger.info("Log updated successfully");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
             e.printStackTrace();
+            logger.warn("Log not found to update",e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Log update failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

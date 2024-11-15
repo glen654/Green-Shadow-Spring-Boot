@@ -9,6 +9,8 @@ import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.service.CropService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Regex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,8 @@ import java.util.List;
 public class CropController {
     @Autowired
     private CropService cropService;
+
+    private static Logger logger = LoggerFactory.getLogger(CropController.class);
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveCrop(@RequestPart ("common_name") String commonName,
@@ -51,18 +55,22 @@ public class CropController {
             buildCropDTO.setSeason(season);
             buildCropDTO.setField(fieldDTO);
             cropService.saveCrop(buildCropDTO);
+            logger.info("Save crop success");
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {
             e.printStackTrace();
+            logger.warn("Returning Http 400 Bad Request",e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Crop save failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping(value = "/{cropCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CropStatus getSelectedCrop(@PathVariable ("crop_code") String crop_code){
         if(!Regex.cropCodeMatcher(crop_code)){
+            logger.error("Crop code is not valid get crop");
             return new SelectedErrorStatus(1,"Crop code is invalid");
         }
         return cropService.getCrop(crop_code);
@@ -75,15 +83,19 @@ public class CropController {
     public ResponseEntity<Void> deleteCrop(@PathVariable ("crop_code") String crop_code){
         try {
             if(!Regex.cropCodeMatcher(crop_code)){
+                logger.error("Crop code is not valid delete");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             cropService.deleteCrop(crop_code);
+            logger.info("Delete crop success");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (CropNotFoundException e){
             e.printStackTrace();
+            logger.warn("Crop not found to delete",e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Crop delete failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -94,15 +106,19 @@ public class CropController {
 
         try {
             if(!Regex.cropCodeMatcher(cropCode) || cropDTO ==null){
+                logger.error("Crop code is not valid to update");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             cropService.updateCrop(cropCode, cropDTO);
+            logger.info("Update crop success");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (CropNotFoundException e){
             e.printStackTrace();
+            logger.warn("Crop not found update",e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
             e.printStackTrace();
+            logger.error("Crop update failed",e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
