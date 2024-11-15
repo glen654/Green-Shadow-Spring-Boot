@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 
 @RestController
 @RequestMapping("api/v1/staff")
+@CrossOrigin
 public class StaffController {
     @Autowired
     private StaffService staffService;
