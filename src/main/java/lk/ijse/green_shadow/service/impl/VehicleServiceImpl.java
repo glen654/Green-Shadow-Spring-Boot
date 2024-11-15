@@ -5,6 +5,7 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.VehicleDao;
 import lk.ijse.green_shadow.dto.VehicleStatus;
 import lk.ijse.green_shadow.dto.impl.VehicleDTO;
+import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.entity.impl.VehicleEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.VehicleNotFoundException;
@@ -70,6 +71,8 @@ public class VehicleServiceImpl implements VehicleService {
             tmpVehicle.get().setFuelType(vehicleDTO.getFuelType());
             tmpVehicle.get().setStatus(vehicleDTO.getStatus());
             tmpVehicle.get().setRemarks(vehicleDTO.getRemarks());
+            StaffEntity staffEntity = mapping.toStaffEntity(vehicleDTO.getAssigned_staff());
+            tmpVehicle.get().setAssigned_staff(staffEntity);
         }
     }
 }

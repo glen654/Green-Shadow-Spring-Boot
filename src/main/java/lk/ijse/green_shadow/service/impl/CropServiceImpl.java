@@ -6,6 +6,7 @@ import lk.ijse.green_shadow.dao.CropDao;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.entity.impl.CropEntity;
+import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.exception.CropNotFoundException;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.service.CropService;
@@ -71,6 +72,8 @@ public class CropServiceImpl implements CropService {
             tmpCrop.get().setCrop_image(cropDTO.getCrop_image());
             tmpCrop.get().setCategory(cropDTO.getCategory());
             tmpCrop.get().setSeason(cropDTO.getSeason());
+            FieldEntity fieldEntity = mapping.toFieldEntity(cropDTO.getField());
+            tmpCrop.get().setField(fieldEntity);
         }
     }
 }

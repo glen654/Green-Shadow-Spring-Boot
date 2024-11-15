@@ -5,7 +5,9 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.FieldDao;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.entity.impl.CropEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
+import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.exception.FieldNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
@@ -68,6 +70,10 @@ public class FieldServiceImpl implements FieldService {
             tmpField.get().setExtent_size(fieldDTO.getExtent_size());
             tmpField.get().setField_image1(fieldDTO.getField_image1());
             tmpField.get().setField_image2(fieldDTO.getField_image2());
+            List<CropEntity> cropEntityList = mapping.toCropEntityList(fieldDTO.getCrops());
+            tmpField.get().setCrops(cropEntityList);
+            List<StaffEntity> staffEntityList = mapping.toStaffEntityList(fieldDTO.getAllocated_staff());
+            tmpField.get().setAllocated_staff(staffEntityList);
         }
     }
 }

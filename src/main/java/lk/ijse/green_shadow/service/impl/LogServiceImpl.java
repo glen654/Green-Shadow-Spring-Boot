@@ -5,7 +5,10 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.MonitoringLogDao;
 import lk.ijse.green_shadow.dto.MonitoringLogStatus;
 import lk.ijse.green_shadow.dto.impl.MonitoringLogDTO;
+import lk.ijse.green_shadow.entity.impl.CropEntity;
+import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.MonitoringLogEntity;
+import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.LogNotFoundException;
 import lk.ijse.green_shadow.service.LogService;
@@ -69,6 +72,12 @@ public class LogServiceImpl implements LogService {
             tmpLog.get().setLog_date(monitoringLogDTO.getLog_date());
             tmpLog.get().setLog_details(monitoringLogDTO.getLog_details());
             tmpLog.get().setObserved_image(monitoringLogDTO.getObserved_image());
+            List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(monitoringLogDTO.getFields());
+            tmpLog.get().setFields(fieldEntityList);
+            List<CropEntity> cropEntityList = mapping.toCropEntityList(monitoringLogDTO.getCrops());
+            tmpLog.get().setCrops(cropEntityList);
+            List<StaffEntity> staffEntityList = mapping.toStaffEntityList(monitoringLogDTO.getStaff());
+            tmpLog.get().setStaff(staffEntityList);
         }
     }
 }

@@ -6,6 +6,8 @@ import lk.ijse.green_shadow.dao.EquipmentDao;
 import lk.ijse.green_shadow.dto.EquipmentStatus;
 import lk.ijse.green_shadow.dto.impl.EquipmentDTO;
 import lk.ijse.green_shadow.entity.impl.EquipmentEntity;
+import lk.ijse.green_shadow.entity.impl.FieldEntity;
+import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.EquipmentNotFoundException;
 import lk.ijse.green_shadow.service.EquipmentService;
@@ -68,6 +70,10 @@ public class EquipmentServiceImpl implements EquipmentService {
             tmpEquipment.get().setName(equipmentDTO.getName());
             tmpEquipment.get().setType(equipmentDTO.getType());
             tmpEquipment.get().setStatus(equipmentDTO.getStatus());
+            StaffEntity staffEntity = mapping.toStaffEntity(equipmentDTO.getAssigned_staff());
+            tmpEquipment.get().setAssigned_staff(staffEntity);
+            FieldEntity fieldEntity = mapping.toFieldEntity(equipmentDTO.getAssigned_field());
+            tmpEquipment.get().setAssigned_field(fieldEntity);
         }
     }
 }

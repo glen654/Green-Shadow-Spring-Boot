@@ -5,7 +5,9 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dto.StaffStatus;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
+import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
+import lk.ijse.green_shadow.entity.impl.VehicleEntity;
 import lk.ijse.green_shadow.exception.StaffNotFoundException;
 import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.AppUtil;
@@ -74,6 +76,10 @@ public class StaffServiceImpl implements StaffService {
             tmpStaff.get().setContact_no(staffDTO.getContact_no());
             tmpStaff.get().setEmail(staffDTO.getEmail());
             tmpStaff.get().setRole(staffDTO.getRole());
+            List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(staffDTO.getFields());
+            tmpStaff.get().setFields(fieldEntityList);
+            List<VehicleEntity> vehicleEntityList = mapping.toVehicleEntityList(staffDTO.getVehicles());
+            tmpStaff.get().setVehicles(vehicleEntityList);
         }
     }
 }
