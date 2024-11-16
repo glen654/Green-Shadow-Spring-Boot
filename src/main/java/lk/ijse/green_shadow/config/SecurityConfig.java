@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("api/v1/auth/**")
                                 .permitAll()
+                                .requestMatchers("api/v1/field/**").hasRole("MANAGER")
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

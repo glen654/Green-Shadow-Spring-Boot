@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +34,8 @@ public class FieldController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveField(@RequestPart ("field_name") String fieldName,
-                                          @RequestPart ("x") Double x,
-                                          @RequestPart ("y") Double y,
+                                          @RequestPart ("x") int x,
+                                          @RequestPart ("y") int y,
                                           @RequestPart ("extent_size") Double extentSize,
                                           @RequestPart ("field_image1") MultipartFile fieldImage1,
                                           @RequestPart ("field_image2") MultipartFile fieldImage2,
@@ -51,7 +52,7 @@ public class FieldController {
             base64FieldImage2 = AppUtil.cropImageToBase64(bytesFieldImage2);
 
             String field_code = AppUtil.generateFieldId();
-            Point location = new Point(x.intValue(), y.intValue());
+            Point location = new Point(x,y);
 
             FieldDTO buildFieldDTO = new FieldDTO();
             buildFieldDTO.setField_code(field_code);

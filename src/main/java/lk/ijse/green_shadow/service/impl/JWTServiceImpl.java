@@ -7,14 +7,17 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lk.ijse.green_shadow.service.JWTService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JWTServiceImpl implements JWTService {
@@ -34,7 +37,9 @@ public class JWTServiceImpl implements JWTService {
     @Override
     public boolean validateToken(String token, UserDetails userDetails) {
         var username = extractUserName(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        var roles = extractRoles(token);
+        boolean isValidRole = roles.contains("ROLE_MANAGER");
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && isValidRole) ;
     }
 
     @Override
@@ -46,8 +51,17 @@ public class JWTServiceImpl implements JWTService {
         return claimResolve.apply(claims);
     }
 
+    private List<String> extractRoles(String token) {
+        final Claims claims = getAllClaims(token);
+        return claims.get("roles", List.class);  // Get the roles from the claims
+    }
+
     private String generateToken(Map<String,Object> extractClaims, UserDetails userDetails){
-        extractClaims.put("role",userDetails.getAuthorities());
+        List<String> roles = userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .map(role -> role.startsWith("ROLE_")? role: "ROLE_" + role)
+                        .collect(Collectors.toList());
+        extractClaims.put("role",roles);
         Date now = new Date();
         Date expire = new Date(now.getTime() + 1000 * 600);
 
@@ -59,7 +73,11 @@ public class JWTServiceImpl implements JWTService {
 
     }
     private String refreshToken(Map<String,Object> extractClaims,UserDetails userDetails){
-        extractClaims.put("role",userDetails.getAuthorities());
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(role -> role.startsWith("ROLE_")? role: "ROLE_" + role)
+                .collect(Collectors.toList());
+        extractClaims.put("role",roles);
         Date now = new Date();
         Date expire = new Date(now.getTime() + 1000 * 600);
         Date refreshExpire = new Date(now.getTime() + 1000 * 600 * 600);
