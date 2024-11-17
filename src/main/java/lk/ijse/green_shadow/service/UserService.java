@@ -5,6 +5,4 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService {
     void saveUser(UserDTO userDTO);
-
-    UserDetailsService userDetailsService();
 }

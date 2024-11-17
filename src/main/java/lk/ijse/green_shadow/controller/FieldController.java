@@ -45,6 +45,7 @@ public class FieldController {
         String base64FieldImage1 = "";
         String base64FieldImage2 = "";
         try {
+
             byte[] bytesFieldImage1 = fieldImage1.getBytes();
             base64FieldImage1 = AppUtil.cropImageToBase64(bytesFieldImage1);
 

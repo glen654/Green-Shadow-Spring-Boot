@@ -9,9 +9,6 @@ import lk.ijse.green_shadow.service.UserService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,11 +26,5 @@ public class UserServiceImpl implements UserService {
         if(saveUser == null) {
             throw new DataPersistException("User not saved");
         }
-    }
-
-    @Override
-    public UserDetailsService userDetailsService() {
-        return username -> userDao.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
