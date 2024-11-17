@@ -1,5 +1,7 @@
 package lk.ijse.green_shadow.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
@@ -33,8 +35,7 @@ public class FieldController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveField(@RequestPart ("field_name") String fieldName,
-                                          @RequestPart ("x") int x,
-                                          @RequestPart ("y") int y,
+                                          @RequestPart ("location") Point location,
                                           @RequestPart ("extent_size") Double extentSize,
                                           @RequestPart ("field_image1") MultipartFile fieldImage1,
                                           @RequestPart ("field_image2") MultipartFile fieldImage2,
@@ -43,8 +44,8 @@ public class FieldController {
     ) {
         String base64FieldImage1 = "";
         String base64FieldImage2 = "";
-        try {
 
+        try {
             byte[] bytesFieldImage1 = fieldImage1.getBytes();
             base64FieldImage1 = AppUtil.cropImageToBase64(bytesFieldImage1);
 
@@ -52,7 +53,6 @@ public class FieldController {
             base64FieldImage2 = AppUtil.cropImageToBase64(bytesFieldImage2);
 
             String field_code = AppUtil.generateFieldId();
-            Point location = new Point(x,y);
 
             FieldDTO buildFieldDTO = new FieldDTO();
             buildFieldDTO.setField_code(field_code);
