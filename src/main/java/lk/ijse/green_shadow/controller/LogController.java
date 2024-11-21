@@ -30,12 +30,12 @@ public class LogController {
     private LogService logService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveLog(@RequestPart ("logDate") String logDate,
-                                        @RequestPart ("logDetails") String logDetails,
+    public ResponseEntity<Void> saveLog(@RequestParam ("logDate") String logDate,
+                                        @RequestParam ("logDetails") String logDetails,
                                         @RequestPart ("observedImage") MultipartFile observedImage,
-                                        @RequestPart ("fields") List<FieldDTO> fields,
-                                        @RequestPart ("crops") List<CropDTO> crops,
-                                        @RequestPart ("staff") List<StaffDTO> staff
+                                        @RequestPart (value = "fields[]",required = false) List<FieldDTO> fields,
+                                        @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
+                                        @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff
     ) {
         String base64ObservedImage = "";
         try {
