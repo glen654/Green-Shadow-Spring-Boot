@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
@@ -30,16 +31,18 @@ public class CropController {
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveCrop(@RequestPart ("common_name") String commonName,
-                                         @RequestPart ("scientific_name") String scientificName,
+    public ResponseEntity<Void> saveCrop(@RequestParam ("common_name") String commonName,
+                                         @RequestParam ("scientific_name") String scientificName,
                                          @RequestPart ("crop_image") MultipartFile cropImage,
-                                         @RequestPart ("category") String category,
-                                         @RequestPart ("season") String season,
-                                         @RequestPart ("field")FieldDTO fieldDTO
+                                         @RequestParam ("category") String category,
+                                         @RequestParam ("season") String season,
+                                         @RequestParam ("field") String fieldDTO
     ){
         String base64CropImage = "";
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            FieldDTO field = objectMapper.readValue(fieldDTO, FieldDTO.class);
             byte[] bytesCropImage = cropImage.getBytes();
             base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
 
@@ -52,7 +55,7 @@ public class CropController {
             buildCropDTO.setCrop_image(base64CropImage);
             buildCropDTO.setCategory(category);
             buildCropDTO.setSeason(season);
-            buildCropDTO.setField(fieldDTO);
+            buildCropDTO.setField(field);
             cropService.saveCrop(buildCropDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {
