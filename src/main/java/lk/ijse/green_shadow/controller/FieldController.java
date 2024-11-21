@@ -1,5 +1,6 @@
 package lk.ijse.green_shadow.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,20 +30,22 @@ public class FieldController {
     @Autowired
     private FieldService fieldService;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveField(@RequestPart ("field_name") String fieldName,
-                                          @RequestPart ("x") int x,
-                                          @RequestPart ("y") int y,
-                                          @RequestPart ("extent_size") Double extentSize,
+    public ResponseEntity<Void> saveField(@RequestParam ("field_name") String fieldName,
+                                          @RequestParam ("x") int x,
+                                          @RequestParam ("y") int y,
+                                          @RequestParam ("extent_size") Double extentSize,
                                           @RequestPart ("field_image1") MultipartFile fieldImage1,
                                           @RequestPart ("field_image2") MultipartFile fieldImage2,
-                                          @RequestPart ("crops") List<CropDTO> crops,
-                                          @RequestPart ("staff") List<StaffDTO> staff
+                                          @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
+                                          @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff
     ) {
         String base64FieldImage1 = "";
         String base64FieldImage2 = "";
         Point location = new Point(x,y);
+
         try {
             byte[] bytesFieldImage1 = fieldImage1.getBytes();
             base64FieldImage1 = AppUtil.fieldImageOneToBase64(bytesFieldImage1);
