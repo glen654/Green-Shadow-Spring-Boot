@@ -3,12 +3,15 @@ package lk.ijse.green_shadow.service.impl;
 import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.FieldDao;
+import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.entity.impl.CropEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.exception.FieldNotFoundException;
+import lk.ijse.green_shadow.exception.StaffNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Mapping;
@@ -23,6 +26,8 @@ import java.util.Optional;
 public class FieldServiceImpl implements FieldService {
     @Autowired
     private FieldDao fieldDao;
+    @Autowired
+    private StaffDao staffDao;
     @Autowired
     private Mapping mapping;
     @Override
@@ -76,4 +81,25 @@ public class FieldServiceImpl implements FieldService {
             tmpField.get().setAllocated_staff(staffEntityList);
         }
     }
+
+    @Override
+    public void updateAllocatedStaff(String fieldCode, List<StaffDTO> staffDTOList) {
+        Optional<FieldEntity> tmpField = fieldDao.findById(fieldCode);
+        if(!tmpField.isPresent()){
+            throw new FieldNotFoundException("Field not found");
+        }
+
+        for(StaffDTO staffDTO : staffDTOList){
+            Optional<StaffEntity> staffEntity = staffDao.findById(staffDTO.getId());
+            if(!staffEntity.isPresent()){
+                throw new StaffNotFoundException("Staff not found");
+            }else{
+                List<StaffEntity> staffEntityList = mapping.toStaffEntityList(staffDTO.getId());
+                tmpField.get().setAllocated_staff();
+            }
+
+        }
+    }
+
+
 }
