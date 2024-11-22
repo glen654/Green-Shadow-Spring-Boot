@@ -18,6 +18,7 @@ import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,17 +89,14 @@ public class FieldServiceImpl implements FieldService {
         if(!tmpField.isPresent()){
             throw new FieldNotFoundException("Field not found");
         }
-
+        List<StaffEntity> allocatedStaffEntites = new ArrayList<>();
         for(StaffDTO staffDTO : staffDTOList){
             Optional<StaffEntity> staffEntity = staffDao.findById(staffDTO.getId());
-            if(!staffEntity.isPresent()){
-                throw new StaffNotFoundException("Staff not found");
-            }else{
-                List<StaffEntity> staffEntityList = mapping.toStaffEntityList(staffDTO.getId());
-                tmpField.get().setAllocated_staff();
-            }
-
+            staffEntity.get().getFields().add(tmpField.get());
+            allocatedStaffEntites.add(staffEntity.get());
         }
+        tmpField.get().setAllocated_staff(allocatedStaffEntites);
+        fieldDao.save(tmpField.get());
     }
 
 
