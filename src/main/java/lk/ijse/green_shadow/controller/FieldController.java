@@ -32,7 +32,7 @@ public class FieldController {
     public ResponseEntity<Void> saveField(@RequestParam ("field_name") String fieldName,
                                           @RequestParam ("x") int x,
                                           @RequestParam ("y") int y,
-                                          @RequestParam ("extent_size") Double extentSize,
+                                          @RequestParam ("extent_size") String size,
                                           @RequestPart ("field_image1") MultipartFile fieldImage1,
                                           @RequestPart ("field_image2") MultipartFile fieldImage2,
                                           @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
@@ -41,6 +41,7 @@ public class FieldController {
         String base64FieldImage1 = "";
         String base64FieldImage2 = "";
         Point location = new Point(x,y);
+        double extentSize = Double.parseDouble(size);
 
         try {
             byte[] bytesFieldImage1 = fieldImage1.getBytes();
