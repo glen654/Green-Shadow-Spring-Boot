@@ -84,20 +84,24 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void updateAllocatedStaff(String fieldCode, List<StaffDTO> staffDTOList) {
+    public void updateAllocatedStaff(String fieldCode,List<String> staffId) {
         Optional<FieldEntity> tmpField = fieldDao.findById(fieldCode);
         if(!tmpField.isPresent()){
             throw new FieldNotFoundException("Field not found");
         }
-        List<StaffEntity> allocatedStaffEntites = new ArrayList<>();
-        for(StaffDTO staffDTO : staffDTOList){
-            Optional<StaffEntity> staffEntity = staffDao.findById(staffDTO.getId());
-            staffEntity.get().getFields().add(tmpField.get());
-            allocatedStaffEntites.add(staffEntity.get());
+        FieldEntity fieldEntity = tmpField.get();
+        for(String staff : staffId){
+            Optional<StaffEntity> tmpStaff = staffDao.findById(staff);
+            if(!tmpStaff.isPresent()){
+                throw new StaffNotFoundException("Staff not found");
+            }else{
+                StaffEntity staffEntity = tmpStaff.get();
+                fieldEntity.getAllocated_staff().add(staffEntity);
+                staffEntity.getFields().add(fieldEntity);
+                staffDao.save(staffEntity);
+            }
         }
-        tmpField.get().setAllocated_staff(allocatedStaffEntites);
-        fieldDao.save(tmpField.get());
+        fieldDao.save(fieldEntity);
     }
-
 
 }

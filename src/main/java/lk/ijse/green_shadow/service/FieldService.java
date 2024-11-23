@@ -17,5 +17,5 @@ public interface FieldService {
 
     void updateField(String fieldCode,FieldDTO fieldDTO);
 
-    void updateAllocatedStaff(String fieldCode, List<StaffDTO> staffDTOList);
+    void updateAllocatedStaff(String fieldCode, List<String> staffId);
 }

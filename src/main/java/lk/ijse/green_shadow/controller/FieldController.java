@@ -116,15 +116,15 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping(value = {"/{fieldCode}","updatestaff"})
+    @PutMapping(value = {"updatestaff","/{fieldCode}"})
     public ResponseEntity<Void> updateAllocatedStaff(@PathVariable ("fieldCode") String fieldCode,
-                                                     @RequestBody List<StaffDTO> staff) {
+                                                     @RequestBody List<String> staffId) {
 
         try {
-            if(!Regex.fieldCodeMatcher(fieldCode) || staff == null){
+            if(!Regex.fieldCodeMatcher(fieldCode) || staffId == null || staffId.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            fieldService.updateAllocatedStaff(fieldCode, staff);
+            fieldService.updateAllocatedStaff(fieldCode, staffId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (FieldNotFoundException e){
             e.printStackTrace();
