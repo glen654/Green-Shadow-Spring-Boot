@@ -117,7 +117,7 @@ public class FieldServiceImpl implements FieldService {
     public FieldDTO getFieldByName(String field_name) {
         Optional<FieldEntity> tmpField = fieldDao.findByFieldName(field_name);
         if(!tmpField.isPresent()){
-            throw new FieldNotFoundException("Field not found: " + field_name);
+            throw new FieldNotFoundException("Field not found");
         }
         return mapping.toFieldDTO(tmpField.get());
     }

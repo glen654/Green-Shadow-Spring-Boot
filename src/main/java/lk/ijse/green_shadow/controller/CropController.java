@@ -1,6 +1,5 @@
 package lk.ijse.green_shadow.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
@@ -11,8 +10,6 @@ import lk.ijse.green_shadow.service.CropService;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Regex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
