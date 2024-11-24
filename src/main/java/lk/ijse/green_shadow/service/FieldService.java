@@ -19,5 +19,5 @@ public interface FieldService {
 
     void updateAllocatedStaff(String fieldCode, List<String> staffId);
 
-    List<FieldDTO> getAllFieldNames();
+    List<String> getAllFieldNames();
 }
