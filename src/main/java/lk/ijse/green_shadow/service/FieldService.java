@@ -20,4 +20,6 @@ public interface FieldService {
     void updateAllocatedStaff(String fieldCode, List<String> staffId);
 
     List<String> getAllFieldNames();
+
+    FieldDTO getFieldByName(String field_name);
 }

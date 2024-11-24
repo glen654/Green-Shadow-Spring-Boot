@@ -113,4 +113,13 @@ public class FieldServiceImpl implements FieldService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public FieldDTO getFieldByName(String field_name) {
+        Optional<FieldEntity> tmpField = fieldDao.findByFieldName(field_name);
+        if(!tmpField.isPresent()){
+            throw new FieldNotFoundException("Field not found: " + field_name);
+        }
+        return mapping.toFieldDTO(tmpField.get());
+    }
+
 }

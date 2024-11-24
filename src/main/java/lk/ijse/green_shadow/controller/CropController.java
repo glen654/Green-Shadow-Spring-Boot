@@ -8,6 +8,7 @@ import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.exception.CropNotFoundException;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.service.CropService;
+import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
@@ -28,7 +29,8 @@ import java.util.List;
 public class CropController {
     @Autowired
     private CropService cropService;
-
+    @Autowired
+    private FieldService fieldService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveCrop(@RequestParam ("common_name") String commonName,
@@ -36,13 +38,12 @@ public class CropController {
                                          @RequestPart ("crop_image") MultipartFile cropImage,
                                          @RequestParam ("category") String category,
                                          @RequestParam ("season") String season,
-                                         @RequestParam ("field") String fieldDTO
+                                         @RequestParam ("field_name") String field_name
     ){
         String base64CropImage = "";
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            FieldDTO field = objectMapper.readValue(fieldDTO, FieldDTO.class);
+            FieldDTO field = fieldService.getFieldByName(field_name);
             byte[] bytesCropImage = cropImage.getBytes();
             base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
 
