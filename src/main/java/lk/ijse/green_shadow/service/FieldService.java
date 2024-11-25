@@ -23,5 +23,5 @@ public interface FieldService {
 
     FieldDTO getFieldByName(String field_name);
 
-    List<FieldDTO> getFieldListByName(List<String> fieldNames);
+    List<FieldDTO> getFieldListByName(List<String> field_name);
 }

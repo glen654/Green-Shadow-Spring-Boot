@@ -124,12 +124,12 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<FieldDTO> getFieldListByName(List<String> fieldNames) {
-        if(fieldNames == null || fieldNames.isEmpty()){
+    public List<FieldDTO> getFieldListByName(List<String> field_name) {
+        if(field_name == null || field_name.isEmpty()){
             return Collections.emptyList();
         }
 
-        List<FieldEntity> fieldEntities = fieldDao.findByFieldNameList(fieldNames);
+        List<FieldEntity> fieldEntities = fieldDao.findByFieldNameList(field_name);
 
         if(fieldEntities.isEmpty()){
             throw new FieldNotFoundException("Field not found");

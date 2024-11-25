@@ -30,11 +30,11 @@ public class StaffController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try {
-            List<String> fieldNames = staffDTO.getFields()
+            List<String> field_name = staffDTO.getFields()
                     .stream()
                     .map(FieldDTO::getField_name)
                     .collect(Collectors.toList());
-            List<FieldDTO> fields = fieldService.getFieldListByName(fieldNames);
+            List<FieldDTO> fields = fieldService.getFieldListByName(field_name);
             staffDTO.setFields(fields);
             staffService.saveStaff(staffDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
