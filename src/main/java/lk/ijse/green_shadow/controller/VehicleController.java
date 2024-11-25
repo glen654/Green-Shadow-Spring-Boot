@@ -5,6 +5,7 @@ import lk.ijse.green_shadow.dto.VehicleStatus;
 import lk.ijse.green_shadow.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.VehicleNotFoundException;
+import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.service.VehicleService;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ import java.util.List;
 public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
-
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {

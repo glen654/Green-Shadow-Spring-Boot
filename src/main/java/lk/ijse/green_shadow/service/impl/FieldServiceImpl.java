@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -120,6 +121,23 @@ public class FieldServiceImpl implements FieldService {
             throw new FieldNotFoundException("Field not found");
         }
         return mapping.toFieldDTO(tmpField.get());
+    }
+
+    @Override
+    public List<FieldDTO> getFieldListByName(List<FieldDTO> fields) {
+        if(fields == null || fields.isEmpty()){
+            return Collections.emptyList();
+        }
+        List<String> fieldNames = fields.stream().map(FieldDTO::getField_name).collect(Collectors.toList());
+        List<FieldEntity> fieldEntities = fieldDao.findByFieldNameList(fieldNames);
+
+        if(fieldEntities.isEmpty()){
+            throw new FieldNotFoundException("Field not found");
+        }
+
+        return fieldEntities.stream()
+                .map(mapping::toFieldDTO)
+                .collect(Collectors.toList());
     }
 
 }

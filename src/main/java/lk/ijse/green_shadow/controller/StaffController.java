@@ -2,9 +2,11 @@ package lk.ijse.green_shadow.controller;
 
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.StaffStatus;
+import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.StaffNotFoundException;
+import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/staff")
@@ -23,11 +26,14 @@ import java.util.List;
 public class StaffController {
     @Autowired
     private StaffService staffService;
-
+    @Autowired
+    private FieldService fieldService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try {
+            List<FieldDTO> fields = fieldService.getFieldListByName(staffDTO.getFields());
+            staffDTO.setFields(fields);
             staffService.saveStaff(staffDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (DataPersistException e){
