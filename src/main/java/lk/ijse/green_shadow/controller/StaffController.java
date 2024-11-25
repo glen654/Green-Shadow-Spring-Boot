@@ -9,8 +9,6 @@ import lk.ijse.green_shadow.exception.StaffNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.Regex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +30,11 @@ public class StaffController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try {
-            List<FieldDTO> fields = fieldService.getFieldListByName(staffDTO.getFields());
+            List<String> fieldNames = staffDTO.getFields()
+                    .stream()
+                    .map(FieldDTO::getField_name)
+                    .collect(Collectors.toList());
+            List<FieldDTO> fields = fieldService.getFieldListByName(fieldNames);
             staffDTO.setFields(fields);
             staffService.saveStaff(staffDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
