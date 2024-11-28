@@ -15,6 +15,7 @@ import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,6 +88,23 @@ public class StaffServiceImpl implements StaffService {
         List<StaffEntity> staffEntities = staffDao.findAll();
         return staffEntities.stream()
                 .map(StaffEntity::getFirst_name)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StaffDTO> getStaffListByName(List<String> staffs) {
+        if(staffs.isEmpty() || staffs == null){
+            return Collections.emptyList();
+        }
+
+        List<StaffEntity> staffEntities = staffDao.findByStaffNameList(staffs);
+
+        if(staffEntities.isEmpty()){
+            throw new StaffNotFoundException("Staff Member Not Found");
+        }
+
+        return staffEntities.stream()
+                .map(mapping::toStaffDTO)
                 .collect(Collectors.toList());
     }
 }

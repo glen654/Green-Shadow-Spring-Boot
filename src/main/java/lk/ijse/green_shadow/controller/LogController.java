@@ -8,7 +8,10 @@ import lk.ijse.green_shadow.dto.impl.MonitoringLogDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.LogNotFoundException;
+import lk.ijse.green_shadow.service.CropService;
+import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.service.LogService;
+import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
@@ -20,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -28,17 +32,26 @@ import java.util.List;
 public class LogController {
     @Autowired
     private LogService logService;
+    @Autowired
+    private FieldService fieldService;
+    @Autowired
+    private CropService cropService;
+    @Autowired
+    private StaffService staffService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveLog(@RequestParam ("logDate") String logDate,
                                         @RequestParam ("logDetails") String logDetails,
                                         @RequestPart ("observedImage") MultipartFile observedImage,
-                                        @RequestPart (value = "fields[]",required = false) List<FieldDTO> fields,
-                                        @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
-                                        @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff
+                                        @RequestPart (value = "fields[]",required = false) List<String> fields,
+                                        @RequestPart (value = "crops[]",required = false) List<String> crops,
+                                        @RequestPart (value = "staff[]",required = false) List<String> staffs
     ) {
         String base64ObservedImage = "";
         try {
+            List<FieldDTO> field = fieldService.getFieldListByName(fields);
+            List<CropDTO> crop = cropService.getCropListByName(crops);
+            List<StaffDTO> staff = staffService.getStaffListByName(staffs);
             byte[] byteObservedImage = observedImage.getBytes();
             base64ObservedImage = AppUtil.observedImageOneToBase64(byteObservedImage);
 
@@ -49,8 +62,8 @@ public class LogController {
             buildMonitoringLogDTO.setLog_date(logDate);
             buildMonitoringLogDTO.setLog_details(logDetails);
             buildMonitoringLogDTO.setObserved_image(base64ObservedImage);
-            buildMonitoringLogDTO.setFields(fields);
-            buildMonitoringLogDTO.setCrops(crops);
+            buildMonitoringLogDTO.setFields(field);
+            buildMonitoringLogDTO.setCrops(crop);
             buildMonitoringLogDTO.setStaff(staff);
             logService.saveLog(buildMonitoringLogDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);

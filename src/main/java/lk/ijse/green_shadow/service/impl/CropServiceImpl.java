@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,6 +85,21 @@ public class CropServiceImpl implements CropService {
         List<CropEntity> cropEntities = cropDao.findAll();
         return cropEntities.stream()
                 .map(CropEntity::getCommon_name)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CropDTO> getCropListByName(List<String> crops) {
+        if(crops.isEmpty() || crops == null) {
+            return Collections.emptyList();
+        }
+        List<CropEntity> cropEntities = cropDao.findByCropNameList(crops);
+
+        if(cropEntities.isEmpty()) {
+            throw new CropNotFoundException("Crop not found");
+        }
+        return cropEntities.stream()
+                .map(mapping::toCropDTO)
                 .collect(Collectors.toList());
     }
 }
