@@ -78,8 +78,6 @@ public class StaffServiceImpl implements StaffService {
             tmpStaff.get().setRole(staffDTO.getRole());
             List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(staffDTO.getFields());
             tmpStaff.get().setFields(fieldEntityList);
-            List<VehicleEntity> vehicleEntityList = mapping.toVehicleEntityList(staffDTO.getVehicles());
-            tmpStaff.get().setVehicles(vehicleEntityList);
         }
     }
 }
