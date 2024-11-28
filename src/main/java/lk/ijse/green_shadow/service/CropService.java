@@ -15,4 +15,6 @@ public interface CropService {
     void deleteCrop(String cropCode);
 
     void updateCrop(String cropCode,CropDTO cropDTO);
+
+    List<String> getAllCropNames();
 }

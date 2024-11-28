@@ -110,4 +110,9 @@ public class CropController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping(value = "getallcropnames",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllCropName(){
+        List<String> cropNames = cropService.getAllCropNames();
+        return ResponseEntity.ok(cropNames);
+    }
 }
