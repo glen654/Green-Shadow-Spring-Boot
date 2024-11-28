@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -79,5 +80,13 @@ public class StaffServiceImpl implements StaffService {
             List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(staffDTO.getFields());
             tmpStaff.get().setFields(fieldEntityList);
         }
+    }
+
+    @Override
+    public List<String> getAllStaffNames() {
+        List<StaffEntity> staffEntities = staffDao.findAll();
+        return staffEntities.stream()
+                .map(StaffEntity::getFirst_name)
+                .collect(Collectors.toList());
     }
 }
