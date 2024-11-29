@@ -43,9 +43,9 @@ public class LogController {
     public ResponseEntity<Void> saveLog(@RequestParam ("logDate") String logDate,
                                         @RequestParam ("logDetails") String logDetails,
                                         @RequestPart ("observedImage") MultipartFile observedImage,
-                                        @RequestPart (value = "fields[]",required = false) List<String> fields,
-                                        @RequestPart (value = "crops[]",required = false) List<String> crops,
-                                        @RequestPart (value = "staff[]",required = false) List<String> staffs
+                                        @RequestParam (value = "fields",required = false) List<String> fields,
+                                        @RequestParam (value = "crops",required = false) List<String> crops,
+                                        @RequestParam (value = "staff",required = false) List<String> staffs
     ) {
         String base64ObservedImage = "";
         try {
