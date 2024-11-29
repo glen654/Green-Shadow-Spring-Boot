@@ -1,8 +1,6 @@
 package lk.ijse.green_shadow.service;
 
-import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.StaffStatus;
-import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 
 import java.util.List;
@@ -20,4 +18,6 @@ public interface StaffService {
     List<String> getAllStaffNames();
 
     List<StaffDTO> getStaffListByName(List<String> staffs);
+
+    StaffDTO getStaffByName(String assignedStaff);
 }

@@ -2,10 +2,12 @@ package lk.ijse.green_shadow.controller;
 
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.VehicleStatus;
+import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.VehicleNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
+import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.service.VehicleService;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
@@ -24,10 +26,14 @@ import java.util.List;
 public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
+    @Autowired
+    private StaffService staffService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
         try {
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
+            vehicleDTO.setAssigned_staff(staff);
             vehicleService.saveVehicle(vehicleDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (DataPersistException e){

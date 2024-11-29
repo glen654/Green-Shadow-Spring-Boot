@@ -7,7 +7,6 @@ import lk.ijse.green_shadow.dto.StaffStatus;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
-import lk.ijse.green_shadow.entity.impl.VehicleEntity;
 import lk.ijse.green_shadow.exception.StaffNotFoundException;
 import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.AppUtil;
@@ -106,5 +105,14 @@ public class StaffServiceImpl implements StaffService {
         return staffEntities.stream()
                 .map(mapping::toStaffDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public StaffDTO getStaffByName(String assignedStaff) {
+        Optional<StaffEntity> tmpStaff = staffDao.findByStaffName(assignedStaff);
+        if(!tmpStaff.isPresent()){
+            throw new StaffNotFoundException("Staff Member Not Found");
+        }
+        return mapping.toStaffDTO(tmpStaff.get());
     }
 }
