@@ -21,4 +21,5 @@ public class FieldDTO implements FieldStatus {
     private String field_image2;
     private List<CropDTO> crops = new ArrayList<>();
     private List<StaffDTO> allocated_staff = new ArrayList<>();
+
 }

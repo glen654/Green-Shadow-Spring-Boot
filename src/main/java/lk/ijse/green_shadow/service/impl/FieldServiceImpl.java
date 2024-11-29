@@ -6,7 +6,6 @@ import lk.ijse.green_shadow.dao.FieldDao;
 import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
-import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.entity.impl.CropEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
@@ -18,9 +17,9 @@ import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

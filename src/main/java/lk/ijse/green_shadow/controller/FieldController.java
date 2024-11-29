@@ -1,6 +1,5 @@
 package lk.ijse.green_shadow.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;

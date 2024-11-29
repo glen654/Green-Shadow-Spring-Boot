@@ -2,7 +2,6 @@ package lk.ijse.green_shadow.service;
 
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
-import lk.ijse.green_shadow.dto.impl.StaffDTO;
 
 import java.util.List;
 
