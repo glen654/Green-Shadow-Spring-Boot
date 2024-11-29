@@ -3,9 +3,13 @@ package lk.ijse.green_shadow.controller;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.EquipmentStatus;
 import lk.ijse.green_shadow.dto.impl.EquipmentDTO;
+import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.EquipmentNotFoundException;
 import lk.ijse.green_shadow.service.EquipmentService;
+import lk.ijse.green_shadow.service.FieldService;
+import lk.ijse.green_shadow.service.StaffService;
 import lk.ijse.green_shadow.util.Regex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +27,17 @@ import java.util.List;
 public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
-
-
+    @Autowired
+    private StaffService staffService;
+    @Autowired
+    private FieldService fieldService;
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
         try {
+            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
+            FieldDTO field = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
+            equipmentDTO.setAssigned_staff(staff);
+            equipmentDTO.setAssigned_field(field);
             equipmentService.saveEquipment(equipmentDTO);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataPersistException e) {

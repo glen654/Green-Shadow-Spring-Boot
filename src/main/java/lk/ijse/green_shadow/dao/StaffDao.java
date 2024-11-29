@@ -16,4 +16,5 @@ public interface StaffDao extends JpaRepository<StaffEntity,String> {
 
     @Query("SELECT s FROM StaffEntity s WHERE s.first_name = :first_name")
     Optional<StaffEntity> findByStaffName(@Param("first_name") String assignedStaff);
+
 }
