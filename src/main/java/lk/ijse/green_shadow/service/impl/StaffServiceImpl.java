@@ -38,7 +38,22 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public List<StaffDTO> getAllStaff() {
-        return mapping.toStaffDTOList(staffDao.findAll());
+        List<StaffEntity> staffs = staffDao.findAll();
+        return staffs.stream()
+                .map(staff -> {
+                    StaffDTO staffDTO = new StaffDTO();
+                    staffDTO.setFirst_name(staff.getFirst_name());
+                    staffDTO.setLast_name(staff.getLast_name());
+                    staffDTO.setDesignation(staff.getDesignation());
+                    staffDTO.setGender(staff.getGender());
+                    staffDTO.setJoined_date(staff.getJoined_date());
+                    staffDTO.setDob(staff.getDob());
+                    staffDTO.setContact_no(staff.getContact_no());
+                    staffDTO.setEmail(staff.getEmail());
+                    staffDTO.setRole(staff.getRole());
+                    return staffDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
