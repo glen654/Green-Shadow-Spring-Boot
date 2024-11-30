@@ -43,7 +43,17 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public List<FieldDTO> getAllFields() {
-        return mapping.toFieldDTOList(fieldDao.findAll());
+        List<FieldEntity> fields = fieldDao.findAll();
+        return fields.stream()
+                .map(field -> {
+                    FieldDTO fieldDTO = new FieldDTO();
+                    fieldDTO.setField_image1(field.getField_image1());
+                    fieldDTO.setField_name(field.getField_name());
+                    fieldDTO.setExtent_size(field.getExtent_size());
+                    fieldDTO.setLocation(field.getLocation());
+                    return fieldDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
