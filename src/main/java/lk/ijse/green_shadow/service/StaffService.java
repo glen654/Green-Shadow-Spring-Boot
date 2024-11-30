@@ -14,7 +14,7 @@ public interface StaffService {
 
     void deleteStaff(String id);
 
-    void updateStaff(String id,StaffDTO staffDTO);
+    void updateStaff(String firstName,StaffDTO staffDTO);
     List<String> getAllStaffNames();
 
     List<StaffDTO> getStaffListByName(List<String> staffs);

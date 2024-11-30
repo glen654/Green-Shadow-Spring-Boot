@@ -53,6 +53,7 @@ public class StaffServiceImpl implements StaffService {
                     staffDTO.setGender(staff.getGender());
                     staffDTO.setJoined_date(staff.getJoined_date());
                     staffDTO.setDob(staff.getDob());
+                    staffDTO.setAddress(staff.getAddress());
                     staffDTO.setContact_no(staff.getContact_no());
                     staffDTO.setEmail(staff.getEmail());
                     staffDTO.setRole(staff.getRole());
@@ -90,8 +91,8 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void updateStaff(String id, StaffDTO staffDTO) {
-        Optional<StaffEntity> tmpStaff = staffDao.findById(id);
+    public void updateStaff(String firstName, StaffDTO staffDTO) {
+        Optional<StaffEntity> tmpStaff = staffDao.findByStaffName(firstName);
         if(!tmpStaff.isPresent()) {
             throw new StaffNotFoundException("Staff Member Not Found");
         }else{
