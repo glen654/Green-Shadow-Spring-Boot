@@ -3,8 +3,12 @@ package lk.ijse.green_shadow.service.impl;
 import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.EquipmentDao;
+import lk.ijse.green_shadow.dao.FieldDao;
+import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dto.EquipmentStatus;
 import lk.ijse.green_shadow.dto.impl.EquipmentDTO;
+import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.entity.impl.EquipmentEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
@@ -18,12 +22,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private EquipmentDao equipmentDao;
+    @Autowired
+    private StaffDao staffDao;
+    @Autowired
+    private FieldDao fieldDao;
     @Autowired
     private Mapping mapping;
 
@@ -38,7 +47,25 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public List<EquipmentDTO> getAllEquipment() {
-        return mapping.toEquipmentDTOList(equipmentDao.findAll());
+        List<EquipmentEntity> equipments = equipmentDao.findAll();
+        return equipments.stream()
+                .map(equipment -> {
+                    EquipmentDTO equipmentDTO = new EquipmentDTO();
+                    equipmentDTO.setName(equipment.getName());
+                    equipmentDTO.setType(equipment.getType());
+                    equipmentDTO.setStatus(equipment.getStatus());
+                    Optional<StaffEntity> assignedStaff = staffDao.findById(equipment.getAssigned_staff().getId());
+                    StaffDTO assignedStaffDTO = assignedStaff.isPresent() ?
+                            mapping.toStaffDTO(assignedStaff.get()) : null;
+                    Optional<FieldEntity> assignedField = fieldDao.
+                            findById(equipment.getAssigned_field().getField_code());
+                    FieldDTO assignedFieldDTO = assignedField.isPresent() ?
+                            mapping.toFieldDTO(assignedField.get()) : null;
+                    equipmentDTO.setAssigned_staff(assignedStaffDTO);
+                    equipmentDTO.setAssigned_field(assignedFieldDTO);
+                    return equipmentDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
