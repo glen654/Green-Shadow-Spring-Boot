@@ -85,8 +85,8 @@ public class CropServiceImpl implements CropService {
     }
 
     @Override
-    public void updateCrop(String cropCode, CropDTO cropDTO) {
-        Optional<CropEntity> tmpCrop = cropDao.findById(cropCode);
+    public void updateCrop(String commonName, CropDTO cropDTO) {
+        Optional<CropEntity> tmpCrop = cropDao.findByCropName(commonName);
         if(!tmpCrop.isPresent()) {
             throw new CropNotFoundException("Crop not found");
         }else {

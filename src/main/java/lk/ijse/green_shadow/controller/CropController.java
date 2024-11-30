@@ -92,23 +92,42 @@ public class CropController {
         }
 
     }
-    @PutMapping(value = "/{cropCode}")
-    public ResponseEntity<Void> updateCrop(@PathVariable ("cropCode") String cropCode,
-                                           @RequestBody CropDTO cropDTO){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{commonName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateCrop(@PathVariable @RequestParam ("common_name") String commonName,
+                                           @RequestParam ("scientific_name") String scientificName,
+                                           @RequestPart ("crop_image") MultipartFile cropImage,
+                                           @RequestParam ("category") String category,
+                                           @RequestParam ("season") String season,
+                                           @RequestParam ("field_name") String field_name
+    ){
+        String base64CropImage = "";
 
         try {
-            if(!Regex.cropCodeMatcher(cropCode) || cropDTO ==null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            cropService.updateCrop(cropCode, cropDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (CropNotFoundException e){
+            FieldDTO field = fieldService.getFieldByName(field_name);
+            byte[] bytesCropImage = cropImage.getBytes();
+            base64CropImage = AppUtil.cropImageToBase64(bytesCropImage);
+
+            String crop_code = AppUtil.generateCropId();
+
+            CropDTO buildCropDTO = new CropDTO();
+            buildCropDTO.setCrop_code(crop_code);
+            buildCropDTO.setCommon_name(commonName);
+            buildCropDTO.setScientific_name(scientificName);
+            buildCropDTO.setCrop_image(base64CropImage);
+            buildCropDTO.setCategory(category);
+            buildCropDTO.setSeason(season);
+            buildCropDTO.setField(field);
+            cropService.updateCrop(commonName,buildCropDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DataPersistException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
     @GetMapping(value = "getallcropnames",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getAllCropName(){
