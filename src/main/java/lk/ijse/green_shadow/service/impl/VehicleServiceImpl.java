@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,7 +38,18 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public List<VehicleDTO> getAllVehicles() {
-        return mapping.toVehicleDTOList(vehicleDao.findAll());
+        List<VehicleEntity> vehicles = vehicleDao.findAll();
+        return vehicles.stream()
+                .map(vehicle -> {
+                    VehicleDTO vehicleDTO = new VehicleDTO();
+                    vehicleDTO.setLicensePlateNumber(vehicle.getLicensePlateNumber());
+                    vehicleDTO.setVehicleCategory(vehicle.getVehicleCategory());
+                    vehicleDTO.setFuelType(vehicle.getFuelType());
+                    vehicleDTO.setStatus(vehicle.getStatus());
+                    vehicleDTO.setRemarks(vehicle.getRemarks());
+                    return vehicleDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
