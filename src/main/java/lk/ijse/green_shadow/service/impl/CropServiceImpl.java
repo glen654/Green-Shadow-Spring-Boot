@@ -3,8 +3,10 @@ package lk.ijse.green_shadow.service.impl;
 import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dao.CropDao;
+import lk.ijse.green_shadow.dao.FieldDao;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
+import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.entity.impl.CropEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.exception.CropNotFoundException;
@@ -28,6 +30,8 @@ public class CropServiceImpl implements CropService {
     @Autowired
     private CropDao cropDao;
     @Autowired
+    private FieldDao fieldDao;
+    @Autowired
     private Mapping mapping;
 
     @Override
@@ -50,6 +54,11 @@ public class CropServiceImpl implements CropService {
                     cropDTO.setScientific_name(crop.getScientific_name());
                     cropDTO.setCategory(crop.getCategory());
                     cropDTO.setSeason(crop.getSeason());
+                    Optional<FieldEntity> assignedField = fieldDao.
+                            findById(crop.getField().getField_code());
+                    FieldDTO assignedFieldDTO = assignedField.isPresent() ?
+                            mapping.toFieldDTO(assignedField.get()) : null;
+                    cropDTO.setField(assignedFieldDTO);
                     return cropDTO;
                 })
                 .collect(Collectors.toList());

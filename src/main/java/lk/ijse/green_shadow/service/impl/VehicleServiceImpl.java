@@ -2,8 +2,10 @@ package lk.ijse.green_shadow.service.impl;
 
 import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
+import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dao.VehicleDao;
 import lk.ijse.green_shadow.dto.VehicleStatus;
+import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.dto.impl.VehicleDTO;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.entity.impl.VehicleEntity;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private VehicleDao vehicleDao;
+    @Autowired
+    private StaffDao staffDao;
     @Autowired
     private Mapping mapping;
 
@@ -47,6 +51,10 @@ public class VehicleServiceImpl implements VehicleService {
                     vehicleDTO.setFuelType(vehicle.getFuelType());
                     vehicleDTO.setStatus(vehicle.getStatus());
                     vehicleDTO.setRemarks(vehicle.getRemarks());
+                    Optional<StaffEntity> assignedStaff = staffDao.findById(vehicle.getAssigned_staff().getId());
+                    StaffDTO assignedStaffDTO = assignedStaff.isPresent() ?
+                            mapping.toStaffDTO(assignedStaff.get()) : null;
+                    vehicleDTO.setAssigned_staff(assignedStaffDTO);
                     return vehicleDTO;
                 })
                 .collect(Collectors.toList());

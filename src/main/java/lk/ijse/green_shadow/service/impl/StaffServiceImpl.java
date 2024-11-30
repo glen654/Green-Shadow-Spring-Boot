@@ -2,8 +2,10 @@ package lk.ijse.green_shadow.service.impl;
 
 import jakarta.transaction.Transactional;
 import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
+import lk.ijse.green_shadow.dao.FieldDao;
 import lk.ijse.green_shadow.dao.StaffDao;
 import lk.ijse.green_shadow.dto.StaffStatus;
+import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
 import lk.ijse.green_shadow.entity.impl.StaffEntity;
@@ -14,6 +16,7 @@ import lk.ijse.green_shadow.util.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffDao staffDao;
+    @Autowired
+    private FieldDao fieldDao;
     @Autowired
     private Mapping mapping;
 
@@ -51,6 +56,14 @@ public class StaffServiceImpl implements StaffService {
                     staffDTO.setContact_no(staff.getContact_no());
                     staffDTO.setEmail(staff.getEmail());
                     staffDTO.setRole(staff.getRole());
+                    List<FieldDTO> assignedFieldDTO = new ArrayList<>();
+                    for (FieldEntity field : staff.getFields()) {
+                        Optional<FieldEntity> fieldOpt = fieldDao.findById(field.getField_name());
+                        if (fieldOpt.isPresent()) {
+                            assignedFieldDTO.add(mapping.toFieldDTO(fieldOpt.get()));
+                        }
+                    }
+                    staffDTO.setFields(assignedFieldDTO);
                     return staffDTO;
                 })
                 .collect(Collectors.toList());
