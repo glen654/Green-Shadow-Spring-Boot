@@ -77,8 +77,8 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void updateField(String fieldCode, FieldDTO fieldDTO) {
-        Optional<FieldEntity> tmpField = fieldDao.findById(fieldCode);
+    public void updateField(String fieldName, FieldDTO fieldDTO) {
+        Optional<FieldEntity> tmpField = fieldDao.findByFieldName(fieldName);
         if(!tmpField.isPresent()){
             throw new FieldNotFoundException("Field not found");
         }else{
@@ -87,10 +87,6 @@ public class FieldServiceImpl implements FieldService {
             tmpField.get().setExtent_size(fieldDTO.getExtent_size());
             tmpField.get().setField_image1(fieldDTO.getField_image1());
             tmpField.get().setField_image2(fieldDTO.getField_image2());
-            List<CropEntity> cropEntityList = mapping.toCropEntityList(fieldDTO.getCrops());
-            tmpField.get().setCrops(cropEntityList);
-            List<StaffEntity> staffEntityList = mapping.toStaffEntityList(fieldDTO.getAllocated_staff());
-            tmpField.get().setAllocated_staff(staffEntityList);
         }
     }
 

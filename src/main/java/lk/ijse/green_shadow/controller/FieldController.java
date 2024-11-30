@@ -98,23 +98,50 @@ public class FieldController {
         }
 
     }
-    @PutMapping(value = "/{fieldCode}")
-    public ResponseEntity<Void> updateField(@PathVariable ("fieldCode") String fieldCode,
-                                            @RequestBody FieldDTO fieldDTO) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{fieldName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateField(@PathVariable @RequestParam ("field_name") String fieldName,
+                                            @RequestParam ("x") int x,
+                                            @RequestParam ("y") int y,
+                                            @RequestParam ("extent_size") String size,
+                                            @RequestPart ("field_image1") MultipartFile fieldImage1,
+                                            @RequestPart ("field_image2") MultipartFile fieldImage2,
+                                            @RequestPart (value = "crops[]",required = false) List<CropDTO> crops,
+                                            @RequestPart (value = "staff[]",required = false) List<StaffDTO> staff
+    ) {
+        String base64FieldImage1 = "";
+        String base64FieldImage2 = "";
+        Point location = new Point(x,y);
+        double extentSize = Double.parseDouble(size);
 
         try {
-            if(!Regex.fieldCodeMatcher(fieldCode) || fieldDTO == null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            fieldService.updateField(fieldCode, fieldDTO);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (FieldNotFoundException e){
+            byte[] bytesFieldImage1 = fieldImage1.getBytes();
+            base64FieldImage1 = AppUtil.fieldImageOneToBase64(bytesFieldImage1);
+
+            byte[] bytesFieldImage2 = fieldImage2.getBytes();
+            base64FieldImage2 = AppUtil.fieldImageTwoToBase64(bytesFieldImage2);
+
+            String field_code = AppUtil.generateFieldId();
+
+            FieldDTO buildFieldDTO = new FieldDTO();
+            buildFieldDTO.setField_code(field_code);
+            buildFieldDTO.setField_name(fieldName);
+            buildFieldDTO.setLocation(location);
+            buildFieldDTO.setExtent_size(extentSize);
+            buildFieldDTO.setField_image1(base64FieldImage1);
+            buildFieldDTO.setField_image2(base64FieldImage2);
+            buildFieldDTO.setCrops(crops);
+            buildFieldDTO.setAllocated_staff(staff);
+            fieldService.updateField(fieldName,buildFieldDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DataPersistException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
     @PutMapping(value = {"updatestaff","/{fieldCode}"})
     public ResponseEntity<Void> updateAllocatedStaff(@PathVariable ("fieldCode") String fieldCode,
