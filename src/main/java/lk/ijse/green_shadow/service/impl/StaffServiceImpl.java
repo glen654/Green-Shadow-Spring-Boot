@@ -91,8 +91,8 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void updateStaff(String firstName, StaffDTO staffDTO) {
-        Optional<StaffEntity> tmpStaff = staffDao.findByStaffName(firstName);
+    public void updateStaff(String staffId, StaffDTO staffDTO) {
+        Optional<StaffEntity> tmpStaff = staffDao.findById(staffId);
         if(!tmpStaff.isPresent()) {
             throw new StaffNotFoundException("Staff Member Not Found");
         }else{
@@ -143,5 +143,10 @@ public class StaffServiceImpl implements StaffService {
             throw new StaffNotFoundException("Staff Member Not Found");
         }
         return mapping.toStaffDTO(tmpStaff.get());
+    }
+
+    @Override
+    public Optional<StaffEntity> findByFirstName(String firstName) {
+        return staffDao.findByStaffName(firstName);
     }
 }

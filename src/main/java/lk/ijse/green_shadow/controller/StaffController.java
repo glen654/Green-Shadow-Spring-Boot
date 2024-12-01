@@ -4,6 +4,7 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.StaffStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
+import lk.ijse.green_shadow.entity.impl.StaffEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.StaffNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -74,15 +76,21 @@ public class StaffController {
         }
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping(value = "/{firstName}")
-    public ResponseEntity<Void> updateStaff(@PathVariable ("firstName") String firstName,
+    @PatchMapping(value = "/{staffId}")
+    public ResponseEntity<Void> updateStaff(@PathVariable ("staffId") String staffId,
                                             @RequestBody StaffDTO staffDTO){
 
         try {
-            if(!Regex.staffIdMatcher(firstName) || staffDTO == null){
+            if(!Regex.staffIdMatcher(staffId) || staffDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            staffService.updateStaff(firstName, staffDTO);
+            List<String> field_name = staffDTO.getFields()
+                    .stream()
+                    .map(FieldDTO::getField_name)
+                    .collect(Collectors.toList());
+            List<FieldDTO> fields = fieldService.getFieldListByName(field_name);
+            staffDTO.setFields(fields);
+            staffService.updateStaff(staffId, staffDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (StaffNotFoundException e){
             e.printStackTrace();
@@ -96,5 +104,18 @@ public class StaffController {
     public ResponseEntity<List<String>> getAllStaffName(){
         List<String> staffNames = staffService.getAllStaffNames();
         return ResponseEntity.ok(staffNames);
+    }
+    @GetMapping(value = "/getstaffid/{firstName}")
+    public ResponseEntity<String> getStaffId(@PathVariable("firstName") String firstName){
+        try {
+            Optional<StaffEntity> staffEntity = staffService.findByFirstName(firstName);
+            return ResponseEntity.ok(staffEntity.get().getId());
+        }catch (StaffNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
