@@ -55,6 +55,7 @@ public class VehicleController {
     public List<VehicleDTO> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
+
     @DeleteMapping(value = "/{vehicleCode}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable("vehicleCode") String vehicleCode) {
         try {
@@ -77,9 +78,11 @@ public class VehicleController {
                                               @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            if(!Regex.vehicleCodeMatcher(licenseNumber) || vehicleDTO == null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+//            if(!Regex.vehicleCodeMatcher(licenseNumber) || vehicleDTO == null){
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
+            vehicleDTO.setAssigned_staff(staff);
             vehicleService.updateVehicle(licenseNumber, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
