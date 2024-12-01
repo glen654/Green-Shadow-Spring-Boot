@@ -73,17 +73,15 @@ public class VehicleController {
         }
     }
     @ResponseStatus(HttpStatus.CREATED)
-    @PatchMapping(value = "/{licenseNumber}")
-    public ResponseEntity<Void> updateVehicle(@PathVariable ("licenseNumber") String licenseNumber,
+    @PatchMapping(value = "/vehicleCode}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
                                               @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-//            if(!Regex.vehicleCodeMatcher(licenseNumber) || vehicleDTO == null){
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
-            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
-            vehicleDTO.setAssigned_staff(staff);
-            vehicleService.updateVehicle(licenseNumber, vehicleDTO);
+            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
             e.printStackTrace();
