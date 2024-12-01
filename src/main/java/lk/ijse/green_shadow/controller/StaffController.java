@@ -73,6 +73,7 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{firstName}")
     public ResponseEntity<Void> updateStaff(@PathVariable ("firstName") String firstName,
                                             @RequestBody StaffDTO staffDTO){

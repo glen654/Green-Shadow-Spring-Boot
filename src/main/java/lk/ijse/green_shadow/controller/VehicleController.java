@@ -71,15 +71,16 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping(value = "/{vehicleCode}")
-    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
+    @ResponseStatus(HttpStatus.CREATED)
+    @PatchMapping(value = "/{licenseNumber}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("licenseNumber") String licenseNumber,
                                               @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
+            if(!Regex.vehicleCodeMatcher(licenseNumber) || vehicleDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
+            vehicleService.updateVehicle(licenseNumber, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
             e.printStackTrace();

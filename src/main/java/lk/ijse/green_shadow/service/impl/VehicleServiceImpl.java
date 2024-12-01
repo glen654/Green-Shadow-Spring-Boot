@@ -81,8 +81,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void updateVehicle(String vehicleCode, VehicleDTO vehicleDTO) {
-        Optional<VehicleEntity> tmpVehicle = vehicleDao.findById(vehicleCode);
+    public void updateVehicle(String licenseNumber, VehicleDTO vehicleDTO) {
+        Optional<VehicleEntity> tmpVehicle = vehicleDao.findByLicenseNumber(licenseNumber);
         if(!tmpVehicle.isPresent()) {
             throw new VehicleNotFoundException("Vehicle Not Found");
         }else {
