@@ -4,6 +4,7 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.VehicleStatus;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
 import lk.ijse.green_shadow.dto.impl.VehicleDTO;
+import lk.ijse.green_shadow.entity.impl.VehicleEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.VehicleNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/vehicle")
@@ -44,20 +46,6 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value = {"getvehiclecode","/{licenseNumber}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getSelectedVehicle(@PathVariable ("licenseNumber") String licenseNumber) {
-        try{
-            VehicleDTO vehicleDTO = vehicleService.getVehicleByLicenseNumber(licenseNumber);
-            if (vehicleDTO != null) {
-                return ResponseEntity.ok(vehicleDTO.getVehicle_code());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VehicleDTO> getAllVehicles() {
         return vehicleService.getAllVehicles();
@@ -79,19 +67,19 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @CrossOrigin(origins = "http://127.0.0.1:5500/")
+
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping(value = "/{licenseNumber}")
-    public ResponseEntity<Void> updateVehicle(@PathVariable ("licenseNumber") String licenseNumber,
+    @PatchMapping(value = "/{vehicleCode}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
                                               @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            if(!Regex.vehicleLicenseMatcher(licenseNumber) || vehicleDTO == null){
+            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
             vehicleDTO.setAssigned_staff(staff);
-            vehicleService.updateVehicle(licenseNumber, vehicleDTO);
+            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
             e.printStackTrace();
@@ -101,6 +89,18 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping(value = "/getvehiclecode/{licenseNumber}")
+    public ResponseEntity<String> getVehicleCode(@PathVariable("licenseNumber") String licenseNumber) {
+        try {
+            Optional<VehicleEntity> vehicleEntity = vehicleService.findByLicenseNumber(licenseNumber);
+            return ResponseEntity.ok(vehicleEntity.get().getVehicle_code());
+        }catch (VehicleNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

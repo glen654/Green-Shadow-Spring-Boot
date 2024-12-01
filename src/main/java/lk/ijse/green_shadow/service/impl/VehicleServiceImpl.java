@@ -81,13 +81,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void updateVehicle(String licenseNumber, VehicleDTO vehicleDTO) {
-        Optional<VehicleEntity> tmpVehicle = vehicleDao.findByLicenseNumber(licenseNumber);
+    public void updateVehicle(String vehicleCode, VehicleDTO vehicleDTO) {
+        Optional<VehicleEntity> tmpVehicle = vehicleDao.findById(vehicleCode);
         if(!tmpVehicle.isPresent()) {
             throw new VehicleNotFoundException("Vehicle Not Found");
         }else {
             tmpVehicle.get().setLicensePlateNumber(vehicleDTO.getLicensePlateNumber());
-            tmpVehicle.get().setVehicle_code(vehicleDTO.getVehicle_code());
+            tmpVehicle.get().setVehicleCategory(vehicleDTO.getVehicleCategory());
             tmpVehicle.get().setFuelType(vehicleDTO.getFuelType());
             tmpVehicle.get().setStatus(vehicleDTO.getStatus());
             tmpVehicle.get().setRemarks(vehicleDTO.getRemarks());
@@ -97,15 +97,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDTO getVehicleByLicenseNumber(String licenseNumber) {
-        Optional<VehicleEntity> vehicleEntity = vehicleDao.findByLicenseNumber(licenseNumber);
-        if(vehicleEntity.isPresent()) {
-            VehicleDTO vehicleDTO = new VehicleDTO();
-            vehicleDTO.setVehicle_code(vehicleEntity.get().getVehicle_code());
-            vehicleDTO.setLicensePlateNumber(vehicleEntity.get().getLicensePlateNumber());
-            return vehicleDTO;
-        }else{
-            throw new VehicleNotFoundException("Vehicle Not Found");
-        }
+    public Optional<VehicleEntity> findByLicenseNumber(String licenseNumber) {
+        return vehicleDao.findByLicenseNumber(licenseNumber);
     }
 }
