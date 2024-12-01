@@ -48,13 +48,6 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public StaffStatus getSelectedStaff(@PathVariable ("id") String id){
-        if(!Regex.staffIdMatcher(id)){
-            return new SelectedErrorStatus(1,"Staff ID does not match");
-        }
-        return staffService.getStaff(id);
-    }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StaffDTO> getAllStaff(){
         return staffService.getAllStaff();

@@ -5,6 +5,7 @@ import lk.ijse.green_shadow.dto.EquipmentStatus;
 import lk.ijse.green_shadow.dto.impl.EquipmentDTO;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
+import lk.ijse.green_shadow.entity.impl.EquipmentEntity;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.EquipmentNotFoundException;
 import lk.ijse.green_shadow.service.EquipmentService;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/equipment")
@@ -75,7 +77,8 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping(value = "/{equipmentId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PatchMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,
                                                 @RequestBody EquipmentDTO equipmentDTO) {
 
@@ -83,8 +86,25 @@ public class EquipmentController {
             if(!Regex.equipIdMatcher(equipmentId) || equipmentDTO == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
+            StaffDTO staff = staffService.getStaffByName(equipmentDTO.getAssigned_staff().getFirst_name());
+            FieldDTO field = fieldService.getFieldByName(equipmentDTO.getAssigned_field().getField_name());
+            equipmentDTO.setAssigned_staff(staff);
+            equipmentDTO.setAssigned_field(field);
             equipmentService.updateEquipment(equipmentId, equipmentDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (EquipmentNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping(value = "/getequipId/{equipmentName}")
+    public ResponseEntity<String> getEquipId(@PathVariable("equipmentName") String equipmentName) {
+        try {
+            Optional<EquipmentEntity> equipmentEntity = equipmentService.findByEquipName(equipmentName);
+            return ResponseEntity.ok(equipmentEntity.get().getEquipment_id());
         }catch (EquipmentNotFoundException e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

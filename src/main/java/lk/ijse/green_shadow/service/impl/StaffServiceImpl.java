@@ -71,16 +71,6 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public StaffStatus getStaff(String id) {
-        if(staffDao.existsById(id)){
-            var selectedStaff = staffDao.getReferenceById(id);
-            return mapping.toStaffDTO(selectedStaff);
-        }else {
-            return new SelectedErrorStatus(2,"Selected Staff Member Not Found");
-        }
-    }
-
-    @Override
     public void deleteStaff(String id) {
         Optional<StaffEntity> foundStaff = staffDao.findById(id);
         if(foundStaff.isPresent()) {

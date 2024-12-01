@@ -103,4 +103,9 @@ public class EquipmentServiceImpl implements EquipmentService {
             tmpEquipment.get().setAssigned_field(fieldEntity);
         }
     }
+
+    @Override
+    public Optional<EquipmentEntity> findByEquipName(String equipmentName) {
+        return equipmentDao.findByEquipmentName(equipmentName);
+    }
 }
