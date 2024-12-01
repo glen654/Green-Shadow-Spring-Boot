@@ -44,12 +44,19 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value = "/{vehicleCode}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public VehicleStatus getSelectedVehicle(@PathVariable ("vehicleCode") String vehicleCode) {
-        if(!Regex.vehicleCodeMatcher(vehicleCode)){
-            return new SelectedErrorStatus(1,"Vehicle code does not match");
+    @GetMapping(value = {"getvehiclecode","/{licenseNumber}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getSelectedVehicle(@PathVariable ("licenseNumber") String licenseNumber) {
+        try{
+            VehicleDTO vehicleDTO = vehicleService.getVehicleByLicenseNumber(licenseNumber);
+            if (vehicleDTO != null) {
+                return ResponseEntity.ok(vehicleDTO.getVehicle_code());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return vehicleService.getVehicle(vehicleCode);
     }
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VehicleDTO> getAllVehicles() {
@@ -72,16 +79,19 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     @ResponseStatus(HttpStatus.CREATED)
-    @PatchMapping(value = "/vehicleCode}")
-    public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
+    @PutMapping(value = "/{licenseNumber}")
+    public ResponseEntity<Void> updateVehicle(@PathVariable ("licenseNumber") String licenseNumber,
                                               @RequestBody VehicleDTO vehicleDTO) {
 
         try {
-            if(!Regex.vehicleCodeMatcher(vehicleCode) || vehicleDTO == null){
+            if(!Regex.vehicleLicenseMatcher(licenseNumber) || vehicleDTO == null){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            vehicleService.updateVehicle(vehicleCode, vehicleDTO);
+            StaffDTO staff = staffService.getStaffByName(vehicleDTO.getAssigned_staff().getFirst_name());
+            vehicleDTO.setAssigned_staff(staff);
+            vehicleService.updateVehicle(licenseNumber, vehicleDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
             e.printStackTrace();
@@ -91,4 +101,6 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }
