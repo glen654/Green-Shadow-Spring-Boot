@@ -145,4 +145,9 @@ public class FieldServiceImpl implements FieldService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<FieldEntity> findByFieldName(String fieldName) {
+        return fieldDao.findByFieldName(fieldName);
+    }
+
 }

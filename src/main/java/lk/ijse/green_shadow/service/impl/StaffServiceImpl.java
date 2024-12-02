@@ -96,8 +96,6 @@ public class StaffServiceImpl implements StaffService {
             tmpStaff.get().setContact_no(staffDTO.getContact_no());
             tmpStaff.get().setEmail(staffDTO.getEmail());
             tmpStaff.get().setRole(staffDTO.getRole());
-            List<FieldEntity> fieldEntityList = mapping.toFieldEntityList(staffDTO.getFields());
-            tmpStaff.get().setFields(fieldEntityList);
         }
     }
 

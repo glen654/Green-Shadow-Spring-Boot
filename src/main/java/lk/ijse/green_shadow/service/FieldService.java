@@ -2,8 +2,10 @@ package lk.ijse.green_shadow.service;
 
 import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.entity.impl.FieldEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FieldService {
     void saveField(FieldDTO fieldDTO);
@@ -23,4 +25,6 @@ public interface FieldService {
     FieldDTO getFieldByName(String field_name);
 
     List<FieldDTO> getFieldListByName(List<String> field_name);
+
+    Optional<FieldEntity> findByFieldName(String fieldName);
 }

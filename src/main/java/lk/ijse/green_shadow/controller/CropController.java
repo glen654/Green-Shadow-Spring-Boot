@@ -4,8 +4,11 @@ import lk.ijse.green_shadow.customStatusCodes.SelectedErrorStatus;
 import lk.ijse.green_shadow.dto.CropStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
+import lk.ijse.green_shadow.entity.impl.CropEntity;
+import lk.ijse.green_shadow.entity.impl.VehicleEntity;
 import lk.ijse.green_shadow.exception.CropNotFoundException;
 import lk.ijse.green_shadow.exception.DataPersistException;
+import lk.ijse.green_shadow.exception.VehicleNotFoundException;
 import lk.ijse.green_shadow.service.CropService;
 import lk.ijse.green_shadow.service.FieldService;
 import lk.ijse.green_shadow.util.AppUtil;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -134,4 +138,18 @@ public class CropController {
         List<String> cropNames = cropService.getAllCropNames();
         return ResponseEntity.ok(cropNames);
     }
+    @GetMapping(value = "/getcropcode/{commonName}")
+    public ResponseEntity<String> getCropCode(@PathVariable("commonName") String commonName){
+        try {
+            Optional<CropEntity> cropEntity = cropService.findByCommonName(commonName);
+            return ResponseEntity.ok(cropEntity.get().getCrop_code());
+        }catch (CropNotFoundException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
