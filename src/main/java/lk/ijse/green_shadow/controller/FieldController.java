@@ -5,9 +5,7 @@ import lk.ijse.green_shadow.dto.FieldStatus;
 import lk.ijse.green_shadow.dto.impl.CropDTO;
 import lk.ijse.green_shadow.dto.impl.FieldDTO;
 import lk.ijse.green_shadow.dto.impl.StaffDTO;
-import lk.ijse.green_shadow.entity.impl.CropEntity;
 import lk.ijse.green_shadow.entity.impl.FieldEntity;
-import lk.ijse.green_shadow.exception.CropNotFoundException;
 import lk.ijse.green_shadow.exception.DataPersistException;
 import lk.ijse.green_shadow.exception.FieldNotFoundException;
 import lk.ijse.green_shadow.service.FieldService;
@@ -26,7 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/field")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class FieldController {
     @Autowired
     private FieldService fieldService;
@@ -170,7 +168,8 @@ public class FieldController {
         List<String> fieldNames = fieldService.getAllFieldNames();
         return ResponseEntity.ok(fieldNames);
     }
-    @GetMapping(value = "/getfieldcode/{fieldName}")
+
+    @GetMapping(value = {"getfieldcode", "/{fieldName}"})
     public ResponseEntity<String> getFieldCode(@PathVariable("fieldName") String fieldName) {
         try {
             Optional<FieldEntity> fieldEntity = fieldService.findByFieldName(fieldName);

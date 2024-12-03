@@ -6,6 +6,7 @@ import lk.ijse.green_shadow.entity.SuperEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "Field")
+@ToString(exclude = {"crops", "allocated_staff"})
 public class FieldEntity implements SuperEntity {
     @Id
     private String field_code;
