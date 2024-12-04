@@ -98,7 +98,7 @@ public class StaffController {
         List<String> staffNames = staffService.getAllStaffNames();
         return ResponseEntity.ok(staffNames);
     }
-    @GetMapping(value = "/getstaffid/{firstName}")
+    @GetMapping( "/getstaffid/{firstName}")
     public ResponseEntity<String> getStaffId(@PathVariable("firstName") String firstName){
         try {
             Optional<StaffEntity> staffEntity = staffService.findByFirstName(firstName);

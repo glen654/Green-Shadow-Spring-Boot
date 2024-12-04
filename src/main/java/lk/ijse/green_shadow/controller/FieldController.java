@@ -169,7 +169,7 @@ public class FieldController {
         return ResponseEntity.ok(fieldNames);
     }
 
-    @GetMapping(value = {"getfieldcode", "/{fieldName}"})
+    @GetMapping("/getfieldcode/{fieldName}")
     public ResponseEntity<String> getFieldCode(@PathVariable("fieldName") String fieldName) {
         try {
             Optional<FieldEntity> fieldEntity = fieldService.findByFieldName(fieldName);

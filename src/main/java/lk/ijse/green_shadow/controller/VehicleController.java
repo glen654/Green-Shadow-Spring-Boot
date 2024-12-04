@@ -89,7 +89,7 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value = "/getvehiclecode/{licenseNumber}")
+    @GetMapping("/getvehiclecode/{licenseNumber}")
     public ResponseEntity<String> getVehicleCode(@PathVariable("licenseNumber") String licenseNumber) {
         try {
             Optional<VehicleEntity> vehicleEntity = vehicleService.findByLicenseNumber(licenseNumber);

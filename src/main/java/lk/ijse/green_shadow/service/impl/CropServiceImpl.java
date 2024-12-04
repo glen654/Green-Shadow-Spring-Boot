@@ -77,7 +77,7 @@ public class CropServiceImpl implements CropService {
     @Override
     public void deleteCrop(String cropCode) {
         Optional<CropEntity> foundCrop = cropDao.findById(cropCode);
-        if(foundCrop.isPresent()) {
+        if(!foundCrop.isPresent()) {
             throw new CropNotFoundException("Crop not found");
         }else {
             cropDao.deleteById(cropCode);

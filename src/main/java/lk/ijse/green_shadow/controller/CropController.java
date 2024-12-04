@@ -138,7 +138,7 @@ public class CropController {
         List<String> cropNames = cropService.getAllCropNames();
         return ResponseEntity.ok(cropNames);
     }
-    @GetMapping(value = "/getcropcode/{commonName}")
+    @GetMapping("/getcropcode/{commonName}")
     public ResponseEntity<String> getCropCode(@PathVariable("commonName") String commonName){
         try {
             Optional<CropEntity> cropEntity = cropService.findByCommonName(commonName);

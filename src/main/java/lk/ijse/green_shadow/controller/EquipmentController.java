@@ -100,7 +100,7 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping(value = "/getequipId/{equipmentName}")
+    @GetMapping("/getequipId/{equipmentName}")
     public ResponseEntity<String> getEquipId(@PathVariable("equipmentName") String equipmentName) {
         try {
             Optional<EquipmentEntity> equipmentEntity = equipmentService.findByEquipName(equipmentName);
