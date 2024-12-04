@@ -80,12 +80,12 @@ public class CropController {
         return cropService.getAllCrops();
     }
     @DeleteMapping(value = "/{cropCode}")
-    public ResponseEntity<Void> deleteCrop(@PathVariable ("crop_code") String crop_code){
+    public ResponseEntity<Void> deleteCrop(@PathVariable ("cropCode") String cropCode){
         try {
-            if(!Regex.cropCodeMatcher(crop_code)){
+            if(!Regex.cropCodeMatcher(cropCode)){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            cropService.deleteCrop(crop_code);
+            cropService.deleteCrop(cropCode);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (CropNotFoundException e){
             e.printStackTrace();
