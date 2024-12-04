@@ -30,8 +30,6 @@ public class CropServiceImpl implements CropService {
     @Autowired
     private CropDao cropDao;
     @Autowired
-    private FieldDao fieldDao;
-    @Autowired
     private Mapping mapping;
 
     @Override

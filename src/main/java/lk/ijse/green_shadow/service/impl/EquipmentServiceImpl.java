@@ -30,10 +30,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private EquipmentDao equipmentDao;
     @Autowired
-    private StaffDao staffDao;
-    @Autowired
-    private FieldDao fieldDao;
-    @Autowired
     private Mapping mapping;
 
     @Override

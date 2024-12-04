@@ -27,8 +27,6 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private VehicleDao vehicleDao;
     @Autowired
-    private StaffDao staffDao;
-    @Autowired
     private Mapping mapping;
 
     @Override
