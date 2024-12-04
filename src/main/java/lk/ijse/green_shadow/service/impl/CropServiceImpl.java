@@ -54,11 +54,14 @@ public class CropServiceImpl implements CropService {
                     cropDTO.setScientific_name(crop.getScientific_name());
                     cropDTO.setCategory(crop.getCategory());
                     cropDTO.setSeason(crop.getSeason());
-                    Optional<FieldEntity> assignedField = fieldDao.
-                            findById(crop.getField().getField_code());
-                    FieldDTO assignedFieldDTO = assignedField.isPresent() ?
-                            mapping.toFieldDTO(assignedField.get()) : null;
-                    cropDTO.setField(assignedFieldDTO);
+                    FieldDTO fieldDTO = Optional.ofNullable(crop.getField())
+                            .map(field -> {
+                                FieldDTO minimalFieldDTO = new FieldDTO();
+                                minimalFieldDTO.setField_name(field.getField_name());
+                                return minimalFieldDTO;
+                            })
+                            .orElse(null);
+                    cropDTO.setField(fieldDTO);
                     return cropDTO;
                 })
                 .collect(Collectors.toList());

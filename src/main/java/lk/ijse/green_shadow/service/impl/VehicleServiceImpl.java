@@ -51,10 +51,14 @@ public class VehicleServiceImpl implements VehicleService {
                     vehicleDTO.setFuelType(vehicle.getFuelType());
                     vehicleDTO.setStatus(vehicle.getStatus());
                     vehicleDTO.setRemarks(vehicle.getRemarks());
-                    Optional<StaffEntity> assignedStaff = staffDao.findById(vehicle.getAssigned_staff().getId());
-                    StaffDTO assignedStaffDTO = assignedStaff.isPresent() ?
-                            mapping.toStaffDTO(assignedStaff.get()) : null;
-                    vehicleDTO.setAssigned_staff(assignedStaffDTO);
+                    StaffDTO staffDTO = Optional.ofNullable(vehicle.getAssigned_staff())
+                            .map(staff -> {
+                                StaffDTO minimalStaffDto = new StaffDTO();
+                                minimalStaffDto.setFirst_name(staff.getFirst_name());
+                                return minimalStaffDto;
+                            })
+                            .orElse(null);
+                    vehicleDTO.setAssigned_staff(staffDTO);
                     return vehicleDTO;
                 })
                 .collect(Collectors.toList());

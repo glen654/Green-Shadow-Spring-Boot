@@ -54,15 +54,22 @@ public class EquipmentServiceImpl implements EquipmentService {
                     equipmentDTO.setName(equipment.getName());
                     equipmentDTO.setType(equipment.getType());
                     equipmentDTO.setStatus(equipment.getStatus());
-                    Optional<StaffEntity> assignedStaff = staffDao.findById(equipment.getAssigned_staff().getId());
-                    StaffDTO assignedStaffDTO = assignedStaff.isPresent() ?
-                            mapping.toStaffDTO(assignedStaff.get()) : null;
-                    Optional<FieldEntity> assignedField = fieldDao.
-                            findById(equipment.getAssigned_field().getField_code());
-                    FieldDTO assignedFieldDTO = assignedField.isPresent() ?
-                            mapping.toFieldDTO(assignedField.get()) : null;
-                    equipmentDTO.setAssigned_staff(assignedStaffDTO);
-                    equipmentDTO.setAssigned_field(assignedFieldDTO);
+                    StaffDTO staffDTO = Optional.ofNullable(equipment.getAssigned_staff())
+                            .map(staff -> {
+                                StaffDTO minimalStaffDto = new StaffDTO();
+                                minimalStaffDto.setFirst_name(staff.getFirst_name());
+                                return minimalStaffDto;
+                            })
+                            .orElse(null);
+                    FieldDTO fieldDTO = Optional.ofNullable(equipment.getAssigned_field())
+                            .map(field -> {
+                                FieldDTO minimalFieldDTO = new FieldDTO();
+                                minimalFieldDTO.setField_name(field.getField_name());
+                                return minimalFieldDTO;
+                            })
+                            .orElse(null);
+                    equipmentDTO.setAssigned_staff(staffDTO);
+                    equipmentDTO.setAssigned_field(fieldDTO);
                     return equipmentDTO;
                 })
                 .collect(Collectors.toList());
