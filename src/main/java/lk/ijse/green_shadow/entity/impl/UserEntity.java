@@ -22,7 +22,6 @@ import java.util.Set;
 @Table(name = "user")
 public class UserEntity implements UserDetails,SuperEntity {
     @Id
-    private String user_id;
     @Column(unique = true)
     private String email;
     private String password;

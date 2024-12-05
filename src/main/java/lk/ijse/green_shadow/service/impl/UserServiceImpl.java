@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDTO userDTO) {
-        userDTO.setUser_id(AppUtil.generateUserId());
         UserEntity saveUser = userDao.save(mapping.toUserEntity(userDTO));
         if(saveUser == null) {
             throw new DataPersistException("User not saved");
