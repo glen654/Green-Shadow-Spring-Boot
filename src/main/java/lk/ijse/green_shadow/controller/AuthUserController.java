@@ -6,6 +6,7 @@ import lk.ijse.green_shadow.secure.JWTAuthResponse;
 import lk.ijse.green_shadow.secure.SignIn;
 import lk.ijse.green_shadow.service.AuthService;
 import lk.ijse.green_shadow.service.UserService;
+import lk.ijse.green_shadow.util.AppUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ public class AuthUserController {
     public ResponseEntity<JWTAuthResponse> saveUser(@RequestBody UserDTO userDTO) {
         try {
             userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            userDTO.setUserId(AppUtil.generateUserId());
             userService.saveUser(userDTO);
             return ResponseEntity.ok(authService.signUp(userDTO));
         }catch (DataPersistException e){

@@ -7,6 +7,7 @@ import lk.ijse.green_shadow.secure.JWTAuthResponse;
 import lk.ijse.green_shadow.secure.SignIn;
 import lk.ijse.green_shadow.service.AuthService;
 import lk.ijse.green_shadow.service.JWTService;
+import lk.ijse.green_shadow.util.AppUtil;
 import lk.ijse.green_shadow.util.Mapping;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,14 +28,17 @@ public class AuthServiceImpl implements AuthService {
         var user = userDao.findByEmail(signIn.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         var generatedToken = jwtService.generateToken(user);
+        System.out.println(generatedToken);
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
 
     @Override
     public JWTAuthResponse signUp(UserDTO userDTO) {
+        userDTO.setUserId(AppUtil.generateUserId());
         UserEntity savedUser = userDao.save(mapping.toUserEntity(userDTO));
         //Generate the token and return it
         var generatedToken = jwtService.generateToken(savedUser);
+        System.out.println(generatedToken);
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
 

@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/field")
-@CrossOrigin(origins = "*")
+@CrossOrigin
 public class FieldController {
     @Autowired
     private FieldService fieldService;

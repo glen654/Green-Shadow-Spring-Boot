@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtConfigFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtConfigFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors();
         return http.build();
     }
     @Bean
