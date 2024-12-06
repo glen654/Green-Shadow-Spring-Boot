@@ -35,7 +35,6 @@ public class EquipmentController {
     @Autowired
     private FieldService fieldService;
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
         try {
@@ -69,7 +68,6 @@ public class EquipmentController {
         return equipmentService.getAllEquipment();
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId) {
         try {
@@ -87,7 +85,6 @@ public class EquipmentController {
         }
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.CREATED)
     @PatchMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,

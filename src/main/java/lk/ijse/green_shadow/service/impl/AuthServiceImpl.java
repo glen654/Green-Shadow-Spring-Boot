@@ -27,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword()));
         var user = userDao.findByEmail(signIn.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        // Generate token when logged in return it
         var generatedToken = jwtService.generateToken(user);
         System.out.println(generatedToken);
         return JWTAuthResponse.builder().token(generatedToken).build();

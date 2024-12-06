@@ -30,7 +30,6 @@ public class FieldController {
     @Autowired
     private FieldService fieldService;
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveField(@RequestParam ("field_name") String fieldName,
                                           @RequestParam ("x") int x,
@@ -88,7 +87,6 @@ public class FieldController {
         return fieldService.getAllFields();
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{fieldCode}")
     public ResponseEntity<Void> deleteField(@PathVariable("fieldCode") String fieldCode) {
         try {
@@ -106,7 +104,7 @@ public class FieldController {
         }
 
     }
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{fieldName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateField(@PathVariable @RequestParam ("field_name") String fieldName,

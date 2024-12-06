@@ -14,6 +14,12 @@ The **Green Shadow Crop Monitoring System** is a comprehensive web-based applica
 - **CORS Enabled:** Supports secure communication with front-end applications.
 - **Blacklist Tokens:** Securely log out users by invalidating tokens.
 
+## API Documentation
+https://documenter.getpostman.com/view/36176457/2sAYBbeUgh
+
+## Front-END Repo
+https://github.com/glen654/Green-shadow-crop-monitoring-system.git
+
 ## Technologies Used
 ### Backend
 - **Java 17**

@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final JWTConfigFilter jwtConfigFilter;
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
+        // Configure security settings
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("api/v1/auth/**")
@@ -37,10 +38,12 @@ public class SecurityConfig {
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // Configure password encoder
         return new BCryptPasswordEncoder();
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        // Configure authentication provider
         DaoAuthenticationProvider dap =
                 new DaoAuthenticationProvider();
         dap.setUserDetailsService(userService.userDetailsService());
@@ -49,6 +52,7 @@ public class SecurityConfig {
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        // Configure authentication manager
         return authenticationConfiguration.getAuthenticationManager();
 
     }

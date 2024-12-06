@@ -43,7 +43,6 @@ public class LogController {
     @Autowired
     private StaffService staffService;
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveLog(@RequestParam ("logDate") String logDate,
                                         @RequestParam ("logDetails") String logDetails,
@@ -81,7 +80,6 @@ public class LogController {
         }
     }
 
-
     @GetMapping(value = "/{logCode}",produces = MediaType.APPLICATION_JSON_VALUE)
     public MonitoringLogStatus getSelectedLog(@PathVariable ("logCode") String logCode){
         if(!Regex.logCodeMatcher(logCode)){
@@ -90,13 +88,11 @@ public class LogController {
         return logService.getLog(logCode);
     }
 
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MonitoringLogDTO> getAllLogs(){
         return logService.getAllLogs();
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{logCode}")
     public ResponseEntity<Void> deleteLog(@PathVariable ("logCode") String logCode){
         try {
@@ -114,7 +110,6 @@ public class LogController {
         }
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @PatchMapping(value = "/{logCode}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLog(@PathVariable ("logCode") String logCode,
                                           @RequestParam ("logDate") String logDate,
@@ -153,7 +148,6 @@ public class LogController {
         }
 
     }
-
 
     @GetMapping("/getlogcode/{logDesc}")
     public ResponseEntity<String> getLogCode(@PathVariable("logDesc") String logDesc){

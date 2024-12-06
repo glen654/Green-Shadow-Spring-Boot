@@ -34,7 +34,7 @@ public class CropController {
     @Autowired
     private FieldService fieldService;
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveCrop(@RequestParam ("common_name") String commonName,
                                          @RequestParam ("scientific_name") String scientificName,
@@ -85,7 +85,6 @@ public class CropController {
         return cropService.getAllCrops();
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{cropCode}")
     public ResponseEntity<Void> deleteCrop(@PathVariable ("cropCode") String cropCode){
         try {
@@ -104,7 +103,6 @@ public class CropController {
 
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{commonName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateCrop(@PathVariable @RequestParam ("common_name") String commonName,

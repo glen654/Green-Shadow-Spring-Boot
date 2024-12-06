@@ -30,7 +30,7 @@ public class StaffController {
     @Autowired
     private FieldService fieldService;
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try {
@@ -57,7 +57,7 @@ public class StaffController {
         return staffService.getAllStaff();
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id){
         try {
@@ -75,7 +75,6 @@ public class StaffController {
         }
     }
 
-    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{staffId}")
     public ResponseEntity<Void> updateStaff(@PathVariable ("staffId") String staffId,
