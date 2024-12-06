@@ -50,7 +50,7 @@ public class JWTServiceImpl implements JWTService {
     private String generateToken(Map<String,Object> extractClaims, UserDetails userDetails){
         extractClaims.put("role",userDetails.getAuthorities());
         Date now = new Date();
-        Date expire = new Date(now.getTime() + 5 * 60 * 60 * 1000);
+        Date expire = new Date(now.getTime() + 15 * 60 * 1000);
 
         return Jwts.builder().setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
@@ -62,7 +62,7 @@ public class JWTServiceImpl implements JWTService {
     private String refreshToken(Map<String,Object> extractClaims,UserDetails userDetails){
         extractClaims.put("role",userDetails.getAuthorities());
         Date now = new Date();
-        Date expire = new Date(now.getTime() + 5 * 60 * 60 * 1000);
+        Date expire = new Date(now.getTime() + 15 * 60 * 1000);
         Date refreshExpire = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
         return Jwts.builder().setClaims(extractClaims)

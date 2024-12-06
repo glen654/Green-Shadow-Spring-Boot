@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class StaffController {
     @Autowired
     private FieldService fieldService;
 
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO) {
         try {
@@ -48,10 +50,14 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StaffDTO> getAllStaff(){
         return staffService.getAllStaff();
     }
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable("id") String id){
         try {
@@ -68,6 +74,8 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{staffId}")
     public ResponseEntity<Void> updateStaff(@PathVariable ("staffId") String staffId,
@@ -93,11 +101,15 @@ public class StaffController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping(value = "getallstaffnames",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getAllStaffName(){
         List<String> staffNames = staffService.getAllStaffNames();
         return ResponseEntity.ok(staffNames);
     }
+
+
     @GetMapping( "/getstaffid/{firstName}")
     public ResponseEntity<String> getStaffId(@PathVariable("firstName") String firstName){
         try {

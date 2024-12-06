@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class VehicleController {
     @Autowired
     private StaffService staffService;
 
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
         try {
@@ -46,11 +48,14 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VehicleDTO> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{vehicleCode}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable("vehicleCode") String vehicleCode) {
         try {
@@ -68,6 +73,7 @@ public class VehicleController {
         }
     }
 
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.CREATED)
     @PatchMapping(value = "/{vehicleCode}")
     public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleCode") String vehicleCode,
@@ -89,6 +95,8 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping("/getvehiclecode/{licenseNumber}")
     public ResponseEntity<String> getVehicleCode(@PathVariable("licenseNumber") String licenseNumber) {
         try {

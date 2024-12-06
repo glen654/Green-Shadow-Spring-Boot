@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class EquipmentController {
     private StaffService staffService;
     @Autowired
     private FieldService fieldService;
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO) {
         try {
@@ -50,6 +53,8 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping(value = "/{equipmentId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public EquipmentStatus getSelectedEquipment(@PathVariable ("equipmentId") String equipmentId) {
         if (!Regex.equipIdMatcher(equipmentId)) {
@@ -57,10 +62,14 @@ public class EquipmentController {
         }
         return equipmentService.getEquipment(equipmentId);
     }
+
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EquipmentDTO> getAllEquipments() {
         return equipmentService.getAllEquipment();
     }
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> deleteEquipment(@PathVariable("equipmentId") String equipmentId) {
         try {
@@ -77,6 +86,8 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('ADMINISTRATIVE')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.CREATED)
     @PatchMapping(value = "/{equipmentId}")
     public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId,
@@ -100,6 +111,8 @@ public class EquipmentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @GetMapping("/getequipId/{equipmentName}")
     public ResponseEntity<String> getEquipId(@PathVariable("equipmentName") String equipmentName) {
         try {

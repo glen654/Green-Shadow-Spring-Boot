@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,7 @@ public class FieldController {
     @Autowired
     private FieldService fieldService;
 
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveField(@RequestParam ("field_name") String fieldName,
                                           @RequestParam ("x") int x,
@@ -72,6 +74,7 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping(value = "/{fieldCode}", produces = MediaType.APPLICATION_JSON_VALUE)
     public FieldStatus getSelectedField(@PathVariable ("fieldCode") String fieldCode) {
         if(!Regex.fieldCodeMatcher(fieldCode)){
@@ -79,10 +82,13 @@ public class FieldController {
         }
         return fieldService.getField(fieldCode);
     }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<FieldDTO> getAllFields() {
         return fieldService.getAllFields();
     }
+
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @DeleteMapping(value = "/{fieldCode}")
     public ResponseEntity<Void> deleteField(@PathVariable("fieldCode") String fieldCode) {
         try {
@@ -100,6 +106,7 @@ public class FieldController {
         }
 
     }
+    @PreAuthorize("(hasRole('MANAGER') or hasRole('SCIENTIST')) and hasAuthority('READ_PRIVILEGE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{fieldName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateField(@PathVariable @RequestParam ("field_name") String fieldName,
@@ -145,6 +152,7 @@ public class FieldController {
         }
 
     }
+
     @PutMapping(value = {"updatestaff","/{fieldCode}"})
     public ResponseEntity<Void> updateAllocatedStaff(@PathVariable ("fieldCode") String fieldCode,
                                                      @RequestBody List<String> staffId) {
@@ -163,6 +171,7 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping(value = "getallfieldnames", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getAllFieldName(){
         List<String> fieldNames = fieldService.getAllFieldNames();
