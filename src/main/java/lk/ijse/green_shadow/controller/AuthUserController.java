@@ -48,4 +48,5 @@ public class AuthUserController {
     public ResponseEntity<JWTAuthResponse> refreshToken(@RequestParam("existingToken") String existingToken) {
         return ResponseEntity.ok(authService.refreshToken(existingToken));
     }
+
 }

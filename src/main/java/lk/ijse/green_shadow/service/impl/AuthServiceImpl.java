@@ -52,4 +52,5 @@ public class AuthServiceImpl implements AuthService {
         var refreshToken = jwtService.refreshToken(findUser);
         return JWTAuthResponse.builder().token(refreshToken).build();
     }
+
 }
